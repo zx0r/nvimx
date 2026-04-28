@@ -9,6 +9,23 @@
 
 ---
 
+#### Quick Start
+```shell
+
+# Get production&ndash;ready in seconds:
+#
+# 1. Install via Homebrew
+# $ brew install zx0r/tap/nvimx
+# 
+# 2. Run the automated setup
+# $ nvimx setup
+#
+# 3. Enable shell integration
+# $ nvimx setup shell
+```
+
+---
+
 #### 0verview
 
 ```shell
@@ -51,23 +68,6 @@
 # - environment diagnostics (`doctor`)
 # - registry inspection
 # - shell completion
-```
-
----
-
-#### Quick Start
-```shell
-
-# Get production&ndash;ready in seconds:
-#
-# 1. Install via Homebrew
-# $ brew install zx0r/tap/nvimx
-# 
-# 2. Run the automated setup
-# $ nvimx setup
-#
-# 3. Enable shell integration
-# $ nvimx setup shell
 ```
 
 ---
