@@ -1,0 +1,68 @@
+# =========================
+# Rust
+# =========================
+src.BAK/
+target/
+**/*.rs.bk
+
+# Cargo (keep lock for binaries)
+# DO NOT ignore Cargo.lock for CLI tools
+
+# =========================
+# OS / Editor junk
+# =========================
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# JetBrains
+.idea/
+
+# Neovim swap / backup
+*.swp
+*.swo
+*~
+
+# =========================
+# Logs / temp
+# =========================
+.log
+tmp/
+temp/
+
+# =========================
+# Env / secrets
+# =========================
+.env
+.env.
+*.key
+*.pem
+
+# =========================
+# Build artifacts (extra safety)
+# =========================
+dist/
+*.tar.gz
+*.zip
+
+# =========================
+# Coverage / profiling
+# =========================
+coverage/
+*.prof
+*.gcda
+*.gcno
+
+# =========================
+# Local configs (optional)
+# =========================
+config.toml
+
+# =========================
+# Optional:
+# =========================
+brain/
+.gemini/
+.serena/
