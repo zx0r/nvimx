@@ -51,8 +51,8 @@ brew install zx0r/tap/nvimx
 # 2. Run the automated setup
 nvimx setup
 
-# 3. Enable shell integration (optional but recommended)
-nvimx setup shell --override-nvim
+# 3. Enable shell integration
+nvimx setup shell
 ```
 
 ---
