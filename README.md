@@ -7,7 +7,7 @@
 
 ---
 
-### Overview
+#### Overview
 
 Provides a complete lifecycle for Neovim environment management:
 
@@ -22,7 +22,7 @@ Profiles are treated as disposable environments. No global mutation.
 
 ---
 
-### Design
+#### Design
 - XDG isolation (`CONFIG`, `DATA`, `STATE`, `CACHE`)
 - process-level separation
 - no shared state between profiles
@@ -31,7 +31,7 @@ Profiles are treated as disposable environments. No global mutation.
 
 ---
 
-### Features
+#### Features
 - profile install from git or registry
 - sandbox execution (ephemeral environments)
 - environment diagnostics (`doctor`)
@@ -40,7 +40,7 @@ Profiles are treated as disposable environments. No global mutation.
 
 ---
 
-### Quick Start
+#### Quick Start
 
 Get production&ndash;ready in seconds:
 
@@ -57,7 +57,7 @@ nvimx setup shell --override-nvim
 
 ---
 
-### Usage
+#### Usage
 
 ```text
 Usage:
@@ -65,7 +65,7 @@ Usage:
   nvimx <command>            # Manage environment
 ```
 
-#### Core Commands
+##### Core Commands
 
 ```bash
 nvimx — Neovim profile manager
@@ -98,7 +98,7 @@ Options:
 
 ---
 
-### Sandbox Mode
+#### Sandbox Mode
 
 The `sandbox` command executes a profile in a temporary environment, ensuring no persistent changes are made to the profile's data:
 
@@ -111,7 +111,7 @@ nvimx sandbox lazyvim
 
 ---
 
-### Configuration
+#### Configuration
 
 `nvimx` features &ldquo;Strong Defaults&rdquo; and works zero&ndash;config out of the box. Customize it via `~/.config/nvimx/config.toml`:
 
@@ -152,7 +152,7 @@ strict_mode = false
 ```
 
 
-### License
+#### License
 
 Distributed under the MIT License. See `LICENSE` for more information
 
