@@ -8,23 +8,25 @@
 
 ---
 
-#### overview
+#### 0verview
 
-nvimx treats neovim configs as isolated environments.
-
-xdg-scoped per profile:
-- config
-- data
-- state
-- cache
-
-supports:
-- remote profiles
-- ephemeral execution
-- registry sources
-
-no shared state.
-no global mutation.
+```shell
+# nvimx treats neovim configs as isolated environments
+#
+# xdg-scoped per profile:
+# - config
+# - data
+# - state
+# - cache
+# 
+# supports:
+# - remote profiles
+# - ephemeral execution
+# - registry sources
+# 
+# no shared state
+# no global mutation 
+```
 
 ---
 
