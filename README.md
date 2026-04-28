@@ -1,17 +1,13 @@
 # NvimX <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
 
-
 [![Latest Release](https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a)](https://github.com/zx0r/nvimx/releases) [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a)](LICENSE) [![Rust](https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a)](https://www.rust-lang.org/) [![Neovim](https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a)](https://neovim.io/) [![XDG Compliance](https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a)](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) [![Hacker News](https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a)](https://news.ycombinator.com/) [![r/unixporn](https://img.shields.io/badge/R%2FUNIXPORN-RICE-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000)](https://reddit.com/r/unixporn)
-
 ### Neovim profile manager built with Rust
 
-##### Enforces strict environment isolation for Neovim profiles through XDG Base Directory manipulation.It ensures zero collision between configurations by decoupling plugin data, state, and cache at the process level. 
-
+#### Isolates runtime environments using XDG overrides. Each profile gets its own config, data, state, and cache. No cross-contamination.
 
 ---
 
-
-### Technical Features
+### Overview
 
 Provides a complete lifecycle for Neovim environment management:
 
@@ -22,9 +18,27 @@ Provides a complete lifecycle for Neovim environment management:
 - **Registry Management**: Tools to inspect, validate, and manage multiple profile sources.
 - **Shell Integration**: Dynamic TAB-completion with real-time discovery of installed profiles.
 
+Profiles are treated as disposable environments. No global mutation.
 
 ---
 
+### Design
+- XDG isolation (`CONFIG`, `DATA`, `STATE`, `CACHE`)
+- process-level separation
+- no shared state between profiles
+- deterministic execution
+- no implicit writes outside assigned scope
+
+---
+
+### Features
+- profile install from git or registry
+- sandbox execution (ephemeral environments)
+- environment diagnostics (`doctor`)
+- registry inspection
+- shell completion
+
+---
 
 ### Quick Start
 
@@ -41,27 +55,9 @@ nvimx setup
 nvimx setup shell --override-nvim
 ```
 
-
 ---
 
-
-### Installation
-
-##### Homebrew (Recommended)
-```bash
-brew tap zx0r/tap
-brew install nvimx
-```
-*This automatically configures dynamic shell completions.*
-
-##### Cargo
-```bash
-cargo install nvimx
-```
-
----
-
-## Usage
+### Usage
 
 ```text
 Usage:
@@ -69,7 +65,7 @@ Usage:
   nvimx <command>            # Manage environment
 ```
 
-### Core Commands
+#### Core Commands
 
 ```bash
 nvimx — Neovim profile manager
@@ -100,9 +96,7 @@ Options:
   -V, --version  Show version
 ```
 
-
 ---
-
 
 ### Sandbox Mode
 
@@ -115,9 +109,7 @@ nvimx sandbox lazyvim
 - **Volatile State**: Wipes previous sandbox state before execution.
 - **Environment Context**: Exports `NVIMX_SANDBOX` for use in configuration logic.
 
-
 ---
-
 
 ### Configuration
 
@@ -157,27 +149,14 @@ fallback_to_plain_nvim = true
 profiles_dir = "~/.config/nvim"
 
 strict_mode = false
-
 ```
-
----
-
-
-### Shell Integration
-
-Make `nvimx` your primary entry point
-
-
----
 
 
 ### License
 
 Distributed under the MIT License. See `LICENSE` for more information
 
-
 ---
-
 
 - **Built with ❤️ for the Neovim Community**
 - [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues)
