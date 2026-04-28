@@ -178,12 +178,11 @@ Distributed under the MIT License. See `LICENSE` for more information
 ---
 
 ```shell
+# $ nvimx <profile> [...]
 
-# $ nvimx
-
-[ok] zero-overhead handoff
-[ok] NVIM_APPNAME isolation
-[ok] argv passthrough
+# argv: passthrough  
+# env: isolated (NVIM_APPNAME)  
+# overhead: ~0
 
 # you bring args  
 # we don't touch them  
@@ -191,10 +190,10 @@ Distributed under the MIT License. See `LICENSE` for more information
 # you choose a profile  
 # we don't leak it  
 
-# you start nvim  
-# we get out of the way  
+# exec nvim  
+# we get out of the way
 
-# happy hacking </>
+# nothing else.. happy hacking.. </>
 ```
 
 
