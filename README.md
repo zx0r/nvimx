@@ -177,5 +177,26 @@ Distributed under the MIT License. See `LICENSE` for more information
 
 ---
 
+```shell
+
+# $ nvimx
+
+[ok] zero-overhead handoff
+[ok] NVIM_APPNAME isolation
+[ok] argv passthrough
+
+# you bring args  
+# we don't touch them  
+
+# you choose a profile  
+# we don't leak it  
+
+# you start nvim  
+# we get out of the way  
+
+# happy hacking </>
+```
+
+
 ##### [ n v i m x ] <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
 
