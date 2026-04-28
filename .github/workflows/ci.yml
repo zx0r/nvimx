@@ -118,6 +118,24 @@ jobs:
 
           echo "[+] Verifying install..."
           nvim --version
+       
+      - name: "⚙️ Setup LazyVim config (isolated)"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          export NVIM_APPNAME="test-nvim"
+
+          CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+          TARGET="$CONFIG_DIR/$NVIM_APPNAME"
+
+          echo "[+] Installing LazyVim into $TARGET"
+
+          rm -rf "$TARGET"
+          git clone --depth=1 https://github.com/LazyVim/starter "$TARGET"
+          rm -rf "$TARGET/.git"
+
+          test -f "$TARGET/init.lua"    
 
       - name: "🧪 Run Tests (Includes Bash E2E validation)"
         # cargo nextest  zero-overhead > tests/integration_test.rs
