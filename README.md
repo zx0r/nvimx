@@ -14,13 +14,13 @@
 # Get production&ndash;ready in seconds:
 #
 # 1. Install via Homebrew
-# $ brew install zx0r/tap/nvimx
+$ brew install zx0r/tap/nvimx
 # 
 # 2. Run the automated setup
-# $ nvimx setup
+$ nvimx setup
 #
 # 3. Enable shell integration
-# $ nvimx setup shell
+$ nvimx setup shell
 ```
 
 ---
