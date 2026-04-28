@@ -74,7 +74,7 @@
 
 #### Usage
 
-```text
+```shell
 # ABOUT:
 #  nvimx is a transparent profile manager and launcher for Neovim.
 #  It imposes zero restrictions on native Neovim functionality.
