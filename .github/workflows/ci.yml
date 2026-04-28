@@ -92,10 +92,32 @@ jobs:
           tool: cargo-nextest
 
       - name: "📦 Install Neovim (for E2E tests)"
+      - name: "📦 Install Neovim (for E2E tests)"
+        shell: bash
         run: |
-          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
-          tar nvim-linux-x86_64.tar.gz
-          sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin/nvim
+          set -euo pipefail
+
+          NVIM_VERSION="stable"
+          NVIM_TAR="nvim-linux-x86_64.tar.gz"
+          INSTALL_DIR="$HOME/.local/nvim"
+
+          echo "[+] Downloading Neovim ($NVIM_VERSION)..."
+          curl -fL --retry 5 --retry-delay 2 --progress-bar \
+            "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/${NVIM_TAR}" -o "$NVIM_TAR"
+
+          echo "[+] Extracting..."
+          rm -rf "$INSTALL_DIR"
+          mkdir -p "$INSTALL_DIR"
+          tar -xzf "$NVIM_TAR" --strip-components=1 -C "$INSTALL_DIR"
+
+          echo "[+] Linking binary..."
+          mkdir -p "$HOME/.local/bin"
+          ln -sf "$INSTALL_DIR/bin/nvim" "$HOME/.local/bin/nvim"
+
+          echo "[+] Updating PATH..."
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+
+          echo "[+] Verifying install..."
           nvim --version
 
       - name: "🧪 Run Tests (Includes Bash E2E validation)"
