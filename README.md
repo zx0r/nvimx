@@ -180,18 +180,16 @@ Distributed under the MIT License. See `LICENSE` for more information
 ```shell
 # $ nvimx <profile> [...]
 
-# argv: passthrough  
-# env: isolated (NVIM_APPNAME)  
-# overhead: ~0
+# [✓] zero-overhead exec
+# [✓] argv passthrough
+# [✓] isolated config
+# [ ] anything else
 
 # you bring args  
 # we don't touch them  
 
 # you choose a profile  
 # we don't leak it  
-
-# exec nvim  
-# we get out of the way
 
 # nothing else.. happy hacking.. </>
 ```
