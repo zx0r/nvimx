@@ -127,7 +127,7 @@ jobs:
           export NVIM_APPNAME="lazyvim"
 
           CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
-          TARGET="$CONFIG_DIR/$NVIM_APPNAME"
+          TARGET="$CONFIG_DIR/nvim/$NVIM_APPNAME"
 
           echo "[+] Installing LazyVim into $TARGET"
 
