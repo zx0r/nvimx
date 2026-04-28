@@ -178,7 +178,7 @@ Distributed under the MIT License. See `LICENSE` for more information
 ---
 
 ```shell
-# nvimx --headless -c "lua io.stdout:write('if you know gentoo; then you know linux; end')" +qa
+# $ nvimx lazyvim --headless -c "lua print('you know gentoo → you know linux')" +qa
 
 # [✓] zero-overhead exec
 # [✓] argv passthrough
