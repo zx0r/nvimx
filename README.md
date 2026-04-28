@@ -137,32 +137,6 @@ default_profile = "lazyvim"
 # registry source
 # → Remote JSON registry for profile installation
 registry_url = "https://raw.githubusercontent.com/zx0r/nvimx-registry/main/index.json"
-
-# enable fzf picker
-# → Enables interactive selection when no default_profile
-use_fzf = true
-
-# logging
-# → Controls verbosity level of CLI output
-log_level = "info"   # debug | info | warn | error
-
-# output format
-# → "json" for scripting, "text" for human-readable CLI
-output = "text"      # text | json
-
-# auto update
-# → Automatically update nvimx binary (not recommended by default)
-auto_update = false
-
-# fallback behavior
-# → If profile not found → fallback to plain nvim instead of error
-fallback_to_plain_nvim = true
-
-# custom profiles dir (advanced)
-# → Override default XDG config path for profiles
-profiles_dir = "~/.config/nvim"
-
-strict_mode = false
 ```
 
 
