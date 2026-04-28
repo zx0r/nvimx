@@ -116,7 +116,7 @@
 #### Sandbox Mode
 
 ```shell
-# The `sandbox` command executes a profile in a temporary environment, ensuring no persistent changes are made to the profile's data:
+# The `sandbox` command executes a profile in a temporary environment
 #
 # $ nvimx sandbox lazyvim
 #
@@ -130,8 +130,8 @@
 #### Configuration
 
 ```shell
-# nvimx features &ldquo;Strong Defaults&rdquo; and works zero&ndash;config out of the box. Customize it via `~/.config/nvimx/config.toml`:
-#
+# strong defaults. zero-config.
+# optional config: ~/.config/nvimx/config.toml
 #
 # default profile if none specified
 # → Used when no profile argument is provided (skips fzf)
@@ -152,9 +152,9 @@
 
 ---
 ```shell
-# - **Built with ❤️ for the Neovim Community**
-[docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
+# → Built with ❤️ for the Neovim Community
 ```
+[docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
 
 ---
 
