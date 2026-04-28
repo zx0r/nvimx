@@ -1,9 +1,13 @@
 # NvimX <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
 
-[![Latest Release](https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a)](https://github.com/zx0r/nvimx/releases) [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a)](LICENSE) [![Rust](https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a)](https://www.rust-lang.org/) [![Neovim](https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a)](https://neovim.io/) [![XDG Compliance](https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a)](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) [![Hacker News](https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a)](https://news.ycombinator.com/) [![r/unixporn](https://img.shields.io/badge/R%2FUNIXPORN-RICE-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000)](https://reddit.com/r/unixporn)
-### Neovim profile manager built with Rust
+[![Latest Release](https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a)](https://github.com/zx0r/nvimx/releases) [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a)](LICENSE) [![Rust](https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a)](https://www.rust-lang.org/) [![Neovim](https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a)](https://neovim.io/) [![XDG Compliance](https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a)](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) [![Hacker News](https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a)](https://news.ycombinator.com/) [![r/unixporn](https://img.shields.io/badge/R%2FUNIXPORN-RICE-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000)](https://reddit.com/r/unixporn)[![CI](https://img.shields.io/github/actions/workflow/status/.../ci.yml)]()
+[![Crates.io](https://img.shields.io/crates/v/nvimx.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)]()
 
-#### Isolates runtime environments using XDG overrides. Each profile gets its own config, data, state, and cache. No cross-contamination.
+
+### Zero-overhead profile manager and launcher for Neovim
+
+#### Isolates runtime environments using XDG overrides (config, data, state, cache) with zero restrictions and no cross-contamination
 
 ---
 
@@ -60,9 +64,22 @@ nvimx setup shell
 #### Usage
 
 ```text
-Usage:
-  nvimx [profile] [args...]  # Launch Neovim
-  nvimx <command>            # Manage environment
+ABOUT:
+  nvimx is a transparent profile manager and launcher for Neovim.
+  It imposes zero restrictions on native Neovim functionality.
+  Profile management is implemented as a seamless overlay: your plugins, configs,
+  LSPs, DAPs, and CLI flags work exactly as if you called `nvim` directly.
+
+USAGE:
+  nvimx [PROFILE] [FILE...] [-- NVIM_ARGS...]     # Launch Neovim with a profile
+  nvimx <COMMAND> [ARGS...]                       # Manage profiles & environment
+
+EXAMPLES:
+  nvimx                         # Launch with default profile
+  nvimx list                    # List available profiles  
+  nvimx lazyvim main.py         # Open main.py using the 'python' profile
+  nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
+
 ```
 
 ##### Core Commands
@@ -159,4 +176,5 @@ Distributed under the MIT License. See `LICENSE` for more information
 ---
 
 - **Built with ❤️ for the Neovim Community**
-- [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues)
+- [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
+

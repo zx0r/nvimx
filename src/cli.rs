@@ -13,14 +13,18 @@ const STYLES: clap::builder::Styles = clap::builder::Styles::styled()
     name = "nvimx",
     version = "0.1.0",
     styles = STYLES,
-    about = "A professional tool to manage multiple Neovim configurations seamlessly.",
+    about = "Zero-overhead Neovim profile manager",
     after_help = format!("\x1b[1mFor more information:\x1b[0m \x1b[36mhttps://github.com/zx0r/nvimx\x1b[0m"),
     override_usage = "nvimx <profile> [args...]\n  nvimx <command>",
     args_conflicts_with_subcommands = true,
     disable_help_subcommand = true,
-    help_template = "nvimx — Neovim profile manager
+    help_template = "\
+{about} 
 
-A tool for managing, installing, and running multiple Neovim configurations.
+nvimx is a transparent profile manager and launcher for Neovim.
+It imposes zero restrictions on native Neovim functionality. 
+Profile management is implemented as a seamless overlay: plugins, configs,
+LSPs, DAPs, and CLI flags work exactly as if you called nvim directly.
 
 \x1b[1mUsage:\x1b[0m
   {usage}

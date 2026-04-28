@@ -91,7 +91,15 @@ jobs:
         with:
           tool: cargo-nextest
 
-      - name: "🧪 Run Tests"
+      - name: "📦 Install Neovim (for E2E tests)"
+        run: |
+          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
+          tar xzvf nvim-linux64.tar.gz
+          sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin/nvim
+          nvim --version
+
+      - name: "🧪 Run Tests (Includes Bash E2E validation)"
+        # cargo nextest  zero-overhead > tests/integration_test.rs
         run: cargo nextest run --all-features
 
   security:
