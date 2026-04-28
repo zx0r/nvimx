@@ -11,7 +11,7 @@
 
 Provides a complete lifecycle for Neovim environment management:
 
-- **Profile Isolation**: Strict separation of `config`, `data`, `state`, and `cache` directories using XDG standard overrides.
+- **Profile Isolation**: Strict separation of `config`, `data`, `state`, and `cache` directories using XDG standard.
 - **Automated Installation**: Resolve and install profiles from remote repositories or JSON registries.
 - **Isolated Execution**: `sandbox` mode for running configurations in volatile environments without persisting state.
 - **Environment Diagnostics**: `doctor` command for auditing system dependencies and configuration integrity.
