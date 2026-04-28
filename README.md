@@ -8,18 +8,23 @@
 
 ---
 
-#### Overview
+#### overview
 
-Provides a complete lifecycle for Neovim environment management:
+nvimx treats neovim configs as isolated environments.
 
-- **Profile Isolation**: Strict separation of `config`, `data`, `state`, and `cache` directories using XDG standard.
-- **Automated Installation**: Resolve and install profiles from remote repositories or JSON registries.
-- **Isolated Execution**: `sandbox` mode for running configurations in volatile environments without persisting state.
-- **Environment Diagnostics**: `doctor` command for auditing system dependencies and configuration integrity.
-- **Registry Management**: Tools to inspect, validate, and manage multiple profile sources.
-- **Shell Integration**: Dynamic TAB-completion with real-time discovery of installed profiles.
+xdg-scoped per profile:
+- config
+- data
+- state
+- cache
 
-Profiles are treated as disposable environments. No global mutation.
+supports:
+- remote profiles
+- ephemeral execution
+- registry sources
+
+no shared state.
+no global mutation.
 
 ---
 
@@ -82,13 +87,9 @@ EXAMPLES:
 ##### Core Commands
 
 ```bash
-nvimx — Neovim profile manager
-
-A tool for managing, installing, and running multiple Neovim configurations.
-
 Usage:
-  nvimx <profile> [args...]
-  nvimx <command>
+  nvimx [profile] [args...]
+  nvimx [command]
 
 Commands:
   list         List available profiles
@@ -100,14 +101,6 @@ Commands:
   registry     Inspect and validate configured registries
   update       Update nvimx to the latest version
   completions  Generate shell completion scripts
-
-Arguments:
-  [PROFILE]    Profile to run (defaults to configured profile)
-  [ARGS]...    Arguments passed to Neovim
-
-Options:
-  -h, --help     Show help
-  -V, --version  Show version
 ```
 
 ---
