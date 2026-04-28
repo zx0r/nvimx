@@ -93,8 +93,8 @@ jobs:
 
       - name: "📦 Install Neovim (for E2E tests)"
         run: |
-          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux64.tar.gz
-          tar xzvf nvim-linux64.tar.gz
+          wget https://github.com/neovim/neovim/releases/download/stable/nvim-linux-x86_64.tar.gz
+          tar nvim-linux-x86_64.tar.gz
           sudo ln -s $(pwd)/nvim-linux64/bin/nvim /usr/local/bin/nvim
           nvim --version
 
