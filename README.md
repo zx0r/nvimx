@@ -176,5 +176,19 @@ Distributed under the MIT License. See `LICENSE` for more information
 ---
 
 - **Built with ❤️ for the Neovim Community**
-- [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
+- [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
+
+---
+
+ nvim
+
+> entering flow state...
+> distractions: disabled
+> focus: maximum
+if you read this — you're already in.
+
+[::] nvimx loaded
+[ok] no distractions
+[ok] pure flow
+# [ n v i m x ] <img src="https://miro.medium.com/v2/format:webp/1*wL9FvRCwlO8X0ysJ8348kw.png" width="66" height="66" align="right">
 
