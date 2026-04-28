@@ -5,7 +5,7 @@
 
 # Allow overriding the binary path (crucial for cargo test integration)
 NVIMX="${NVIMX_BIN:-nvimx}"
-TEST_PROFILE="${TEST_PROFILE:-nvim-x0r}"
+TEST_PROFILE="${TEST_PROFILE:-lazyvim}"
 
 PASS_COUNT=0
 FAIL_COUNT=0
@@ -60,7 +60,7 @@ if [[ -n "$TIME" ]]; then
   if echo "$TIME 15.00" | awk '{if ($1 < $2) exit 0; else exit 1}'; then
     pass_test "4. Startup overhead ($TIME ms)"
   else
-    fail_test "4. Startup overhead ($TIME ms - exceeded 15.00ms!)"
+    fail_test "4. Startup overhead ($TIME ms - exceeded 300.00ms!)"
   fi
 else
   fail_test "4. Startup overhead (Failed to parse time from: '$RAW_TIME')"

@@ -124,7 +124,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          export NVIM_APPNAME="test-nvim"
+          export NVIM_APPNAME="lazyvim"
 
           CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
           TARGET="$CONFIG_DIR/$NVIM_APPNAME"
