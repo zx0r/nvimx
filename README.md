@@ -59,15 +59,15 @@
 ```shell
 
 # Get production&ndash;ready in seconds:
-
+#
 # 1. Install via Homebrew
-brew install zx0r/tap/nvimx
-
+# $ brew install zx0r/tap/nvimx
+# 
 # 2. Run the automated setup
-nvimx setup
-
+# $ nvimx setup
+#
 # 3. Enable shell integration
-nvimx setup shell
+# $ nvimx setup shell
 ```
 
 ---
@@ -75,41 +75,40 @@ nvimx setup shell
 #### Usage
 
 ```text
-ABOUT:
-  nvimx is a transparent profile manager and launcher for Neovim.
-  It imposes zero restrictions on native Neovim functionality.
-  Profile management is implemented as a seamless overlay: your plugins, configs,
-  LSPs, DAPs, and CLI flags work exactly as if you called `nvim` directly.
-
-USAGE:
-  nvimx [PROFILE] [FILE...] [-- NVIM_ARGS...]     # Launch Neovim with a profile
-  nvimx <COMMAND> [ARGS...]                       # Manage profiles & environment
-
-EXAMPLES:
-  nvimx                         # Launch with default profile
-  nvimx list                    # List available profiles  
-  nvimx lazyvim main.py         # Open main.py using the 'python' profile
-  nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
-
+# ABOUT:
+#  nvimx is a transparent profile manager and launcher for Neovim.
+#  It imposes zero restrictions on native Neovim functionality.
+#  Profile management is implemented as a seamless overlay: your plugins, configs,
+#  LSPs, DAPs, and CLI flags work exactly as if you called `nvim` directly.
+#
+# USAGE:
+#  nvimx [PROFILE] [FILE...] [-- NVIM_ARGS...]     # Launch Neovim with a profile
+#  nvimx <COMMAND> [ARGS...]                       # Manage profiles & environment
+#
+# EXAMPLES:
+#  nvimx                         # Launch with default profile
+#  nvimx list                    # List available profiles  
+#  nvimx lazyvim main.py         # Open main.py using the 'python' profile
+#  nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
 ```
 
 ##### Core Commands
 
 ```bash
-Usage:
-  nvimx [profile] [args...]
-  nvimx [command]
-
-Commands:
-  list         List available profiles
-  install      Install a profile from a repository or registry
-  clean        Remove profile data (config, cache, state)
-  doctor       Diagnose environment and dependencies
-  setup        Initialize environment and onboarding
-  sandbox      Run a profile in an isolated environment
-  registry     Inspect and validate configured registries
-  update       Update nvimx to the latest version
-  completions  Generate shell completion scripts
+# Usage:
+#  nvimx [profile] [args...]
+#  nvimx [command]
+#
+# Commands:
+#  list         List available profiles
+#  install      Install a profile from a repository or registry
+#  clean        Remove profile data (config, cache, state)
+#  doctor       Diagnose environment and dependencies
+#  setup        Initialize environment and onboarding
+#  sandbox      Run a profile in an isolated environment
+#  registry     Inspect and validate configured registries
+#  update       Update nvimx to the latest version
+#  completions  Generate shell completion scripts
 ```
 
 ---
@@ -119,7 +118,7 @@ Commands:
 ```shell
 # The `sandbox` command executes a profile in a temporary environment, ensuring no persistent changes are made to the profile's data:
 #
-# nvimx sandbox lazyvim
+# $ nvimx sandbox lazyvim
 #
 # - **XDG Overrides**: Forcibly separates `XDG_CONFIG_HOME`, `DATA`, `STATE`, and `CACHE`.
 # - **Volatile State**: Wipes previous sandbox state before execution.
@@ -148,14 +147,13 @@ Commands:
 #### License
 
 ```shell
-Distributed under the MIT License. See `LICENSE` for more information
+# Distributed under the MIT License. See `LICENSE` for more information
 ```
 
 ---
 ```shell
-
-- **Built with ❤️ for the Neovim Community**
-- [docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
+# - **Built with ❤️ for the Neovim Community**
+[docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
 ```
 
 ---
