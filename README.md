@@ -151,12 +151,6 @@
 ```
 
 ---
-```shell
-# → Built with ❤️ for the Neovim Community
-```
-[docs](docs/GUIDE.md) | [report](https://github.com/zx0r/nvimx/issues) 
-
----
 
 ```shell
 # $ nvimx lazyvim --headless -c "lua print('you know gentoo → you know linux')" +qa
