@@ -178,7 +178,7 @@ Distributed under the MIT License. See `LICENSE` for more information
 ---
 
 ```shell
-# $ nvimx <profile> [...]
+# $ nvimx zx0r --headless -c "lua io.stdout:write('if you know gentoo; then you know linux; end')" +qa
 
 # [✓] zero-overhead exec
 # [✓] argv passthrough
