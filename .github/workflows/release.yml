@@ -229,11 +229,24 @@ jobs:
           manifest = JSON.parse(File.read('dist-manifest.json'))
           version = manifest['app_version']
           
+          puts "App Version: #{version}"
+          
           # Collect all artifacts from all releases
           artifacts = manifest['releases'].flat_map { |r| r['artifacts'] }
           
+          # Debug: list all artifact names and targets
+          puts "Found artifacts in manifest:"
+          artifacts.each do |a|
+            puts " - Name: #{a['name']}, Targets: #{a['target_triples']}"
+          end
+
           def find_asset(assets, target)
             asset = assets.find { |a| a['target_triples']&.include?(target) && a['name']&.end_with?('.tar.gz') }
+            if asset.nil?
+              # Fallback: search by name pattern if target_triples is missing or incomplete
+              asset = assets.find { |a| a['name']&.include?(target) && a['name']&.end_with?('.tar.gz') }
+            end
+            
             if asset.nil?
               puts "::error::Could not find .tar.gz artifact for target #{target}"
               exit 1
@@ -279,6 +292,7 @@ jobs:
           File.write(formula_path, formula)
           puts "Successfully fixed Homebrew formula at #{formula_path}"
           EOF
+
 
       - id: cargo-cyclonedx
         shell: bash
