@@ -227,36 +227,42 @@ jobs:
           ruby <<'EOF'
           require 'json'
           manifest = JSON.parse(File.read('dist-manifest.json'))
-          version = manifest['app_version']
           
+          # Get version from the first release
+          version = manifest['app_version'] || manifest['releases'][0]['app_version']
           puts "App Version: #{version}"
           
-          # Collect all artifacts from all releases
-          artifacts = manifest['releases'].flat_map { |r| r['artifacts'] }
+          # Get all artifact objects from the top-level artifacts map
+          all_artifacts = manifest['artifacts'].values
           
-          # Debug: list all artifact names and targets
-          puts "Found artifacts in manifest:"
-          artifacts.each do |a|
-            puts " - Name: #{a['name']}, Targets: #{a['target_triples']}"
-          end
-
-          def find_asset(assets, target)
-            asset = assets.find { |a| a['target_triples']&.include?(target) && a['name']&.end_with?('.tar.gz') }
-            if asset.nil?
-              # Fallback: search by name pattern if target_triples is missing or incomplete
-              asset = assets.find { |a| a['name']&.include?(target) && a['name']&.end_with?('.tar.gz') }
-            end
+          def find_asset(artifacts, target)
+            # Find the .tar.gz for the target
+            asset = artifacts.find { |a| a['target_triples']&.include?(target) && a['name']&.end_with?('.tar.gz') }
+            
+            # Fallback: search by name pattern
+            asset ||= artifacts.find { |a| a['name']&.include?(target) && a['name']&.end_with?('.tar.gz') }
             
             if asset.nil?
               puts "::error::Could not find .tar.gz artifact for target #{target}"
               exit 1
             end
+            
+            # Read the actual SHA256 from the checksum file
+            # cargo-dist names the checksum file in the 'checksum' field
+            checksum_file = "target/distrib/#{asset['checksum']}"
+            if File.exist?(checksum_file)
+              asset['actual_sha256'] = File.read(checksum_file).split[0]
+            else
+              puts "::error::Checksum file not found: #{checksum_file}"
+              exit 1
+            end
+            
             asset
           end
 
-          arm_mac = find_asset(artifacts, 'aarch64-apple-darwin')
-          intel_mac = find_asset(artifacts, 'x86_64-apple-darwin')
-          linux_x86 = find_asset(artifacts, 'x86_64-unknown-linux-gnu')
+          arm_mac = find_asset(all_artifacts, 'aarch64-apple-darwin')
+          intel_mac = find_asset(all_artifacts, 'x86_64-apple-darwin')
+          linux_x86 = find_asset(all_artifacts, 'x86_64-unknown-linux-gnu')
 
           formula_path = "target/distrib/nvimx.rb"
           
@@ -268,13 +274,13 @@ jobs:
 
               if OS.mac? && Hardware::CPU.arm?
                 url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{arm_mac['name']}"
-                sha256 "#{arm_mac['checksum']}"
+                sha256 "#{arm_mac['actual_sha256']}"
               elsif OS.mac? && Hardware::CPU.intel?
                 url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{intel_mac['name']}"
-                sha256 "#{intel_mac['checksum']}"
+                sha256 "#{intel_mac['actual_sha256']}"
               elsif OS.linux? && Hardware::CPU.intel?
                 url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{linux_x86['name']}"
-                sha256 "#{linux_x86['checksum']}"
+                sha256 "#{linux_x86['actual_sha256']}"
               end
 
               license "MIT"
@@ -292,6 +298,7 @@ jobs:
           File.write(formula_path, formula)
           puts "Successfully fixed Homebrew formula at #{formula_path}"
           EOF
+
 
 
       - id: cargo-cyclonedx
