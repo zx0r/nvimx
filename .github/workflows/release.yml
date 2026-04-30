@@ -507,7 +507,7 @@ jobs:
         # or use environment variable CARGO_REGISTRY_TOKEN
         # Error: Process completed with exit code 101.
         run: | 
-          cargo publish
+          run: cargo publish --provenance
 
 
   announce:
