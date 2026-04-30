@@ -501,11 +501,12 @@ jobs:
       - name: Publish Package
         shell: bash
         #[UNCOMMENT AFTER SETUP AND REMOVE ECHO COMMANDS]
-        run: |
-          # echo "⚠️ ACTION REQUIRED: OIDC is not yet configured!"
-          # echo "Please follow the 4-phase manual in the workflow comments above."
-          # echo "After completion, replace this step with: cargo publish"
-          # exit 1 
+        # echo "⚠️ ACTION REQUIRED: OIDC is not yet configured!"
+        # Updating crates.io index
+        # error: no token found, please run `cargo login`
+        # or use environment variable CARGO_REGISTRY_TOKEN
+        # Error: Process completed with exit code 101.
+        run: | 
           cargo publish
 
 
