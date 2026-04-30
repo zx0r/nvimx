@@ -8,70 +8,75 @@ nvimx is a system CLI tool for managing multiple Neovim configurations (profiles
 
 ---
 
-#### Quick Start
-```shell
+### Quick Start
 
-# Get production&ndash;ready in seconds:
-#
-# 1. Install via Homebrew
-brew install zx0r/tap/nvimx
-# 
-# 2. Run the automated setup
+#### 1. Installation
+
+**macOS / Linux (Homebrew)**
+
+```bash
+brew tap zx0r/tap
+brew install nvimx
+```
+**Rust Toolchain (Cargo)**
+
+```bash
+cargo install nvimx
+```
+
+#### 2. Initialization
+
+```bash
 nvimx setup
-#
-# 3. Enable shell integration
+```
+
+#### 3. Shell Integration (Recommended)
+
+```bash
 nvimx setup shell
 ```
 
 ---
 
-#### 0verview
+### 0verview
 
-```shell
-# nvimx treats neovim configs as isolated environments
-#
-# xdg-scoped per profile:
-# - config
-# - data
-# - state
-# - cache
-# 
-# supports:
-# - remote profiles
-# - ephemeral execution
-# - registry sources
-# 
-# no shared state
-# no global mutation 
-```
+xdg-scoped per profile:
+- config
+- data
+- state
+- cache
+ 
+supports:
+- remote profiles
+- ephemeral execution
+- registry sources
+
+no shared state
+no global mutation 
 
 ---
 
-#### Design
-```shell
+### Design
 
-# - XDG isolation (`CONFIG`, `DATA`, `STATE`, `CACHE`)
-# - process-level separation
-# - no shared state between profiles
-# - deterministic execution
-# - no implicit writes outside assigned scope
-```
+- XDG isolation (`CONFIG`, `DATA`, `STATE`, `CACHE`)
+- process-level separation
+- no shared state between profiles
+- deterministic execution
+- no implicit writes outside assigned scope
 
 ---
 
-#### Features
+### Features
 
-```shell
-# - profile install from git or registry
-# - sandbox execution (ephemeral environments)
-# - environment diagnostics (`doctor`)
-# - registry inspection
-# - shell completion
-```
+- profile install from git or registry
+- sandbox execution (ephemeral environments)
+- environment diagnostics (`doctor`) 
+- registry inspection
+- shell completion
 
 ---
 
-#### Usage
+### Usage
 
 ```shell
 # ABOUT:
@@ -91,7 +96,7 @@ nvimx setup shell
 #  nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
 ```
 
-##### Core Commands
+#### Core Commands
 
 ```bash
 Commands:
