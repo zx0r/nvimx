@@ -8,6 +8,9 @@ members = ["cargo:."]
 # The preferred dist version to use in CI
 cargo-dist-version = "0.31.0"
 
+# Allow manual modifications to CI workflows
+allow-dirty = ["ci"]
+
 # CI backends to support
 ci = ["github"]
 
