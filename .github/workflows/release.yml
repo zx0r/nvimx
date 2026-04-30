@@ -222,8 +222,9 @@ jobs:
 
           cp dist-manifest.json "$BUILD_MANIFEST_NAME"
       - name: Fix Homebrew Formula
-        shell: ruby
+        shell: bash
         run: |
+          ruby <<'EOF'
           require 'json'
           manifest = JSON.parse(File.read('dist-manifest.json'))
           version = manifest['app_version']
@@ -250,17 +251,17 @@ jobs:
             class Nvimx < Formula
               desc "Fast and flexible Neovim profile manager"
               homepage "https://github.com/zx0r/nvimx"
-              version "\#{version}"
+              version "#{version}"
 
               if OS.mac? && Hardware::CPU.arm?
-                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{arm_mac['name']}"
-                sha256 "\#{arm_mac['checksum']}"
+                url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{arm_mac['name']}"
+                sha256 "#{arm_mac['checksum']}"
               elsif OS.mac? && Hardware::CPU.intel?
-                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{intel_mac['name']}"
-                sha256 "\#{intel_mac['checksum']}"
+                url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{intel_mac['name']}"
+                sha256 "#{intel_mac['checksum']}"
               elsif OS.linux? && Hardware::CPU.intel?
-                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{linux_x86['name']}"
-                sha256 "\#{linux_x86['checksum']}"
+                url "https://github.com/zx0r/nvimx/releases/download/v#{version}/#{linux_x86['name']}"
+                sha256 "#{linux_x86['checksum']}"
               end
 
               license "MIT"
@@ -270,13 +271,15 @@ jobs:
               end
 
               test do
-                system "\#{bin}/nvimx", "--version"
+                system "#{bin}/nvimx", "--version"
               end
             end
           RUBY
 
           File.write(formula_path, formula)
-          puts "Successfully fixed Homebrew formula at \#{formula_path}"
+          puts "Successfully fixed Homebrew formula at #{formula_path}"
+          EOF
+
       - id: cargo-cyclonedx
         shell: bash
         run: |
