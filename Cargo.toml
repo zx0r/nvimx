@@ -8,25 +8,29 @@ homepage = "https://github.com/zx0r/nvimx"
 authors = ["zx0r <admin@zx0r.io>"]
 license = "MIT OR Apache-2.0"
 categories = ["command-line-utilities"]
-keywords = ["nvimx", "nvim", "neovim", "cli", "profile-manager", "dotfiles"]
+keywords = ["nvimx", "neovim", "cli", "profile-manager", "dotfiles"]
 
 [workspace]
 members = ["."]
+
+[profile.dev]
+# level true/2 is usually overkill, cf. <https://doc.rust-lang.org/cargo/reference/profiles.html#debug>
+debug = "limited"
+# thin-local LTO is basically free, cf. <https://doc.rust-lang.org/cargo/reference/profiles.html#lto>
+lto = false
+# this speeds up xz compression etc. significantly. we could
+# be more selective about which packages to optimize but :shrug:
+package."*" = { opt-level = 2 }
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
 
 [profile.release]
 lto = true
 strip = true
 opt-level = "z"
-
-# The profile that 'dist' will use to build
-[profile.dist]
-inherits = "release"
-lto = "thin"
-
-
-[[bin]]
-name = "nvimx"
-path = "src/main.rs"
+codegen-units = 1
 
 [dependencies]
 clap = { version = "4", features = ["derive"] }
@@ -49,3 +53,10 @@ indicatif = "0.18"
 [dev-dependencies]
 pretty_assertions = "1.4.0"
 rand = "0.9.0"
+
+[workspace.metadata.release]
+shared-version = true
+tag-name = "v{{version}}"
+pre-release-commit-message = "release: {{version}}"
+publish = false
+
