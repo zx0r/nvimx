@@ -290,10 +290,11 @@ jobs:
               end
 
               test do
-                system "#{bin}/nvimx", "--version"
+                system "\#{bin}/nvimx", "--version"
               end
             end
           RUBY
+
 
           File.write(formula_path, formula)
           puts "Successfully fixed Homebrew formula at #{formula_path}"
