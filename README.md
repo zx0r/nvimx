@@ -15,9 +15,10 @@ nvimx is a system CLI tool for managing multiple Neovim configurations (profiles
 **macOS / Linux (Homebrew)**
 
 ```bash
-brew tap zx0r/tap
-brew install nvimx
+brew install zx0r/tap/nvimx
 ```
+
+
 **Rust Toolchain (Cargo)**
 
 ```bash
