@@ -141,10 +141,11 @@ pub fn execute(json: bool) -> Result<()> {
     }
 
     report.registry = if let Some(url) = cfg.registry_urls.first() {
-        let client = reqwest::blocking::Client::builder()
-            .timeout(std::time::Duration::from_secs(2))
-            .build()?;
-        if client.get(url).send().is_ok() {
+        let agent = ureq::Agent::config_builder()
+            .timeout_global(Some(std::time::Duration::from_secs(2)))
+            .build()
+            .new_agent();
+        if agent.get(url).header("User-Agent", "nvimx").call().is_ok() {
             print_check(
                 "registry",
                 Status::Ok,

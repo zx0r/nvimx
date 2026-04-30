@@ -18,7 +18,7 @@ pub enum RegistryError {
     #[error("Invalid repo URL '{0}'")]
     InvalidUrl(String),
     #[error("HTTP request failed: {0}")]
-    RequestFailed(#[from] reqwest::Error),
+    RequestFailed(#[from] ureq::Error),
     #[error("All registries failed and no cache available")]
     AllFailed,
 }
@@ -96,12 +96,18 @@ pub fn fetch_smart(urls: &[String], force_update: bool) -> Result<Registry> {
 }
 
 pub fn fetch_raw(url: &str) -> Result<Registry, RegistryError> {
-    let client = reqwest::blocking::Client::builder()
-        .user_agent("nvimx")
-        .timeout(std::time::Duration::from_secs(3))
-        .build()?;
+    let agent = ureq::Agent::config_builder()
+        .timeout_global(Some(std::time::Duration::from_secs(3)))
+        .build()
+        .new_agent();
 
-    let registry: Registry = client.get(url).send()?.json()?;
+    let registry: Registry = agent
+        .get(url)
+        .header("User-Agent", "nvimx")
+        .call()?
+        .body_mut()
+        .read_json()?;
+
     validate(&registry).map_err(|e| RegistryError::InvalidName(e.to_string()))?;
 
     Ok(registry)

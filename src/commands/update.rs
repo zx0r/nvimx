@@ -38,19 +38,20 @@ pub fn execute() -> Result<()> {
     let current_version_str = env!("CARGO_PKG_VERSION");
     let current_version = Version::parse(current_version_str)?;
 
-    let client = reqwest::blocking::Client::builder()
-        .user_agent("nvimx")
-        .build()?;
+    let agent = ureq::Agent::config_builder()
+        .build()
+        .new_agent();
 
     output::success("checking for updates...");
-    let release: Release = client
+    let release: Release = agent
         .get(format!(
             "https://api.github.com/repos/{}/releases/latest",
             repo
         ))
-        .send()
+        .call()
         .context("failed to fetch release info from github")?
-        .json()
+        .body_mut()
+        .read_json()
         .context("failed to parse github api response")?;
 
     let latest_version_str = release.tag_name.trim_start_matches('v');
@@ -96,8 +97,16 @@ pub fn execute() -> Result<()> {
         })?;
 
     output::success("downloading...");
-    let mut response = client.get(&asset.browser_download_url).send()?;
-    let content_length = response.content_length().unwrap_or(0);
+    let mut response = agent
+        .get(&asset.browser_download_url)
+        .header("User-Agent", "nvimx")
+        .call()?;
+    let content_length = response
+        .headers()
+        .get("Content-Length")
+        .and_then(|v| v.to_str().ok())
+        .and_then(|v| v.parse::<u64>().ok())
+        .unwrap_or(0);
 
     let pb = ProgressBar::new(content_length);
     pb.set_style(
@@ -108,8 +117,9 @@ pub fn execute() -> Result<()> {
 
     let mut bytes = Vec::with_capacity(content_length as usize);
     let mut buffer = [0; 8192];
+    let mut body = response.body_mut().as_reader();
     loop {
-        let n = response.read(&mut buffer)?;
+        let n = body.read(&mut buffer)?;
         if n == 0 {
             break;
         }

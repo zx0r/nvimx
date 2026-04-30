@@ -442,15 +442,50 @@ jobs:
           done
           git push
 
+  publish-crates-io:
+    name: publish-crates-io
+    needs:
+      - plan
+      - host
+    runs-on: "ubuntu-22.04"
+    if: ${{ needs.plan.outputs.publishing == 'true' && (!fromJson(needs.plan.outputs.val).announcement_is_prerelease || fromJson(needs.plan.outputs.val).publish_prereleases) }}
+    # ПЕРВЫЙ ЭТАП: Первая публикация (v0.1.0) должна быть выполнена ВРУЧНУЮ.
+    # Это необходимо для закрепления права владения именем крейта на crates.io.
+    # 
+    # Инструкция:
+    # 1. Сгенерируйте API-токен на https://crates.io/settings/tokens
+    # 2. Выполните в локальном терминале: cargo publish --token <ВАШ_ТОКЕН>
+    # 
+    # ВТОРОЙ ЭТАП (OIDC / Trusted Publishing):
+    # После первой публикации раскомментируйте блок permissions ниже и настройте 
+    # Trusted Publishing в настройках крейта на crates.io.
+    # 
+    # permissions:
+    #   id-token: write  # Обязательно для запроса JWT через OIDC
+    #   contents: read   # Обязательно для actions/checkout
+    #
+    steps:
+      - uses: actions/checkout@v6
+      - name: Install Rust
+        run: rustup update stable && rustup default stable
+      - name: Publish to crates.io
+        shell: bash
+        run: |
+          echo "ПЕРВАЯ ПУБЛИКАЦИЯ ДОЛЖНА БЫТЬ ВЫПОЛНЕНА ВРУЧНУЮ."
+          echo "После этого настройте Trusted Publishing на crates.io и активируйте OIDC в этом workflow."
+          # Когда OIDC будет настроен, замените этот блок на:
+          # cargo publish --provenance
+
   announce:
     needs:
       - plan
       - host
       - publish-homebrew-formula
+      - publish-crates-io
     # use "always() && ..." to allow us to wait for all publish jobs while
     # still allowing individual publish jobs to skip themselves (for prereleases).
     # "host" however must run to completion, no skipping allowed!
-    if: ${{ always() && needs.host.result == 'success' && (needs.publish-homebrew-formula.result == 'skipped' || needs.publish-homebrew-formula.result == 'success') }}
+    if: ${{ always() && needs.host.result == 'success' && (needs.publish-homebrew-formula.result == 'skipped' || needs.publish-homebrew-formula.result == 'success') && (needs.publish-crates-io.result == 'skipped' || needs.publish-crates-io.result == 'success') }}
     runs-on: "ubuntu-22.04"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
