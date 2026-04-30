@@ -226,37 +226,43 @@ jobs:
         run: |
           ruby <<'EOF'
           require 'json'
+          require 'digest'
           manifest = JSON.parse(File.read('dist-manifest.json'))
-          
+
           # Get version from the first release
           version = manifest['app_version'] || manifest['releases'][0]['app_version']
           puts "App Version: #{version}"
-          
+
           # Get all artifact objects from the top-level artifacts map
           all_artifacts = manifest['artifacts'].values
-          
+
           def find_asset(artifacts, target)
             # Find the .tar.gz for the target
             asset = artifacts.find { |a| a['target_triples']&.include?(target) && a['name']&.end_with?('.tar.gz') }
-            
+
             # Fallback: search by name pattern
             asset ||= artifacts.find { |a| a['name']&.include?(target) && a['name']&.end_with?('.tar.gz') }
-            
+
             if asset.nil?
               puts "::error::Could not find .tar.gz artifact for target #{target}"
               exit 1
             end
-            
-            # Read the actual SHA256 from the checksum file
-            # cargo-dist names the checksum file in the 'checksum' field
-            checksum_file = "target/distrib/#{asset['checksum']}"
-            if File.exist?(checksum_file)
-              asset['actual_sha256'] = File.read(checksum_file).split[0]
+
+            # Calculate the actual SHA256 from the file itself
+            file_path = "target/distrib/#{asset['name']}"
+            if !File.exist?(file_path)
+              # Try root if not in target/distrib
+              file_path = asset['name']
+            end
+
+            if File.exist?(file_path)
+              asset['actual_sha256'] = Digest::SHA256.file(file_path).hexdigest
+              puts "Calculated hash for #{asset['name']}: #{asset['actual_sha256']}"
             else
-              puts "::error::Checksum file not found: #{checksum_file}"
+              puts "::error::Artifact file not found: #{asset['name']}"
               exit 1
             end
-            
+
             asset
           end
 
@@ -265,7 +271,7 @@ jobs:
           linux_x86 = find_asset(all_artifacts, 'x86_64-unknown-linux-gnu')
 
           formula_path = "target/distrib/nvimx.rb"
-          
+
           formula = <<~RUBY
             class Nvimx < Formula
               desc "Fast and flexible Neovim profile manager"
@@ -295,10 +301,10 @@ jobs:
             end
           RUBY
 
-
           File.write(formula_path, formula)
           puts "Successfully fixed Homebrew formula at #{formula_path}"
           EOF
+
 
 
 
