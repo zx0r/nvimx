@@ -1,0 +1,73 @@
+# NOTE ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# ███╗   ██╗██╗   ██╗██╗███╗   ███╗ ██╗   ██╗
+# ████╗  ██║██║   ██║██║████╗ ████║ ╚██╗ ██╔╝
+# ██╔██╗ ██║██║   ██║██║██╔████╔██║   ╚███╔╝
+# ██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║   ██╔██╗
+# ██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║  ██╔╝ ██╗
+# ╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝  ╚═╝  ╚═╝
+# Copyright (c) 2026 for the NeoVim community
+#
+#  nvimx Configuration File
+#  Documentation: https://github.com/zx0r/nvimx
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# -----------------------------------------------------------------------------
+# Core Execution & Routing
+# -----------------------------------------------------------------------------
+
+# The default Neovim profile to launch when no arguments are provided.
+# If defined, this bypasses the interactive picker.
+# Example: "lazyvim", "kickstart", or leave empty ("") to force picker.
+default_profile = "lazyvim"
+
+# Defines the fallback strategy when a requested profile is not found.
+# If true: Gracefully degrades to vanilla Neovim (clears NVIM_APPNAME).
+# If false: Aborts execution with an error.
+fallback_to_plain_nvim = true
+
+# Enforces fail-fast execution.
+# If true: Overrides 'fallback_to_plain_nvim' and 'use_fzf'. Any missing 
+# or invalid profile will immediately terminate the process with a fatal error.
+strict_mode = false
+
+# -----------------------------------------------------------------------------
+# Interface & Behavior
+# -----------------------------------------------------------------------------
+
+# Enables the interactive fuzzy finder (fzf) for profile selection.
+# Triggered only when no profile is explicitly passed in the CLI and 
+# 'default_profile' is not set (or points to a missing profile).
+use_fzf = true
+
+# Defines the standard output format for the CLI.
+# Options: 
+#   - "text" (Human-readable, colored output)
+#   - "json" (Structured output for scripting, wrappers, and CI/CD)
+output = "text"
+
+# -----------------------------------------------------------------------------
+# Paths & Registries
+# -----------------------------------------------------------------------------
+
+# The remote JSON registry endpoint used for discovering, fetching, 
+# and installing predefined Neovim distributions/profiles.
+registry_url = "https://raw.githubusercontent.com/zx0r/nvimx-registry/main/index.json"
+
+# The absolute or tilde-expanded path where Neovim profiles are stored.
+# By default, nvimx relies on the standard XDG config directory.
+# Change this only for advanced sandboxing or portable setups.
+profiles_dir = "~/.config/nvim"
+
+# -----------------------------------------------------------------------------
+# System & Maintenance
+# -----------------------------------------------------------------------------
+
+# Controls the verbosity of nvimx internal telemetry and warnings.
+# Options: "debug" | "info" | "warn" | "error" | "off"
+log_level = "info"
+
+# Toggles automatic background updates for the nvimx binary.
+# Note: Keep false for stable, reproducible environments or CI pipelines.
+auto_update = false

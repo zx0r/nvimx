@@ -1,0 +1,62 @@
+[package]
+name = "nvimx"
+version = "0.1.0"
+edition = "2024"
+repository = "https://github.com/zx0r/nvimx"
+description = "Fast and flexible Neovim profile manager"
+homepage = "https://github.com/zx0r/nvimx"
+authors = ["zx0r <admin@zx0r.io>"]
+license = "MIT OR Apache-2.0"
+categories = ["command-line-utilities"]
+keywords = ["nvimx", "neovim", "cli", "profile-manager", "dotfiles"]
+
+[workspace]
+members = ["."]
+
+[profile.dev]
+# level true/2 is usually overkill, cf. <https://doc.rust-lang.org/cargo/reference/profiles.html#debug>
+debug = "limited"
+# thin-local LTO is basically free, cf. <https://doc.rust-lang.org/cargo/reference/profiles.html#lto>
+lto = false
+# this speeds up xz compression etc. significantly. we could
+# be more selective about which packages to optimize but :shrug:
+package."*" = { opt-level = 2 }
+
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+[profile.release]
+lto = true
+strip = true
+opt-level = "z"
+codegen-units = 1
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+anyhow = "1"
+dirs = "5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+ureq = { version = "3.2", features = ["json"] }
+which = "6"
+chrono = "0.4"
+clap_complete = "4.6"
+semver = "1"
+owo-colors = "4"
+thiserror = "2"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+indicatif = "0.18"
+
+[dev-dependencies]
+pretty_assertions = "1.4.0"
+rand = "0.9.0"
+
+[workspace.metadata.release]
+shared-version = true
+tag-name = "v{{version}}"
+pre-release-commit-message = "release: {{version}}"
+publish = false
+

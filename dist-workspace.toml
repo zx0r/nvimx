@@ -1,0 +1,78 @@
+# Reference configuration for 'dist' (cargo-dist)
+# Generated as a professional standard for nvimx
+
+[workspace]
+members = ["cargo:."]
+
+[dist]
+# The preferred dist version to use in CI
+cargo-dist-version = "0.31.0"
+
+# Allow manual modifications to CI workflows
+allow-dirty = ["ci"]
+
+# CI backends to support
+ci = ["github"]
+
+# The installers to generate for each app
+installers = ["shell", "homebrew"]
+
+# Publish jobs to run in CI
+publish-jobs = ["homebrew"]
+
+# A GitHub repo to push Homebrew formulas to
+tap = "zx0r/homebrew-tap"
+
+# Checksum algorithm for archives (standard: sha256)
+checksum = "sha256"
+
+# The archive format to use for non-windows builds
+unix-archive = ".tar.gz"
+
+# Whether to embed dependency information using cargo-auditable
+# Set to false to avoid extra tool dependencies in CI
+cargo-auditable = false
+
+# Whether to use cargo-cyclonedx to generate an SBOM for security
+cargo-cyclonedx = true
+
+# Build only the required packages, and individually
+precise-builds = true
+
+# Use zig for easy cross-compilation on Linux
+zig = true
+
+# Path that installers should place binaries in (CARGO_HOME is standard for Rust)
+install-path = "CARGO_HOME"
+
+# Whether to install an updater program with shell installers
+install-updater = true
+
+# Custom message shown after successful installation
+install-success-msg = "nvimx is installed! Run 'nvimx --help' to get started."
+
+# Whether builds should be cached in CI for speed
+cache-builds = true
+
+# Target platforms to build apps for (Modern multi-platform support)
+targets = [
+    "aarch64-apple-darwin",
+    "x86_64-apple-darwin",
+    "aarch64-unknown-linux-gnu",
+    "aarch64-unknown-linux-musl",
+    "x86_64-unknown-linux-gnu",
+    "x86_64-unknown-linux-musl",
+]
+
+# Whether to sign macOS executables (Requires Apple Developer Certificate)
+macos-sign = false
+
+# Provide SLSA provenance/attestations from GitHub for security
+github-attestations = true
+
+[dist.github-custom-runners]
+# Optimized runners for specific architectures
+aarch64-apple-darwin = "macos-14"
+x86_64-apple-darwin = "macos-14"
+aarch64-unknown-linux-gnu = "ubuntu-24.04-arm"
+x86_64-unknown-linux-gnu = "ubuntu-24.04"

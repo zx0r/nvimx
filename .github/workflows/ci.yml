@@ -1,0 +1,198 @@
+# ─────────────────────────────────────────────────────────────
+# Continuous Integration — Quality, Testing & Security
+#
+# This workflow:
+# • enforces code quality (formatting, linting)
+# • executes full test suite (nextest)
+# • audits dependencies and licenses (cargo-deny, cargo-audit)
+# • validates release logic (cargo-dist plan)
+#
+# Design principles:
+# • fast feedback via parallel jobs
+# • fail-fast quality gates
+# • reproducible builds with caching
+# • least-privilege permissions
+# • clean and observable CI UX
+# ─────────────────────────────────────────────────────────────
+
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  quality:
+    name: "🛡️ [Quality] Lint & Format"
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: "🛒 Checkout Code"
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: "⚙️ Setup Rust"
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: "💾 Cache Rust Artifacts"
+        uses: Swatinem/rust-cache@v2
+
+      - name: "📏 Check Formatting"
+        run: cargo fmt --all -- --check
+
+      - name: "🔍 Run Clippy"
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: "📜 Build Docs"
+        env:
+          RUSTDOCFLAGS: "-D warnings"
+        run: cargo doc --no-deps --all-features
+
+  test:
+    name: "🧪 [Test] Run Test Suite"
+    runs-on: ubuntu-latest
+    needs: quality
+    timeout-minutes: 30
+
+    steps:
+      - name: "🛒 Checkout Code"
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: "⚙️ Setup Rust"
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: "💾 Cache Rust Artifacts"
+        uses: Swatinem/rust-cache@v2
+
+      - name: "🏗️ Install Nextest"
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-nextest
+
+      - name: "📦 Install Neovim (for E2E tests)"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          NVIM_VERSION="stable"
+          NVIM_TAR="nvim-linux-x86_64.tar.gz"
+          INSTALL_DIR="$HOME/.local/nvim"
+
+          echo "[+] Downloading Neovim ($NVIM_VERSION)..."
+          curl -fL --retry 5 --retry-delay 2 --progress-bar \
+            "https://github.com/neovim/neovim/releases/download/${NVIM_VERSION}/${NVIM_TAR}" -o "$NVIM_TAR"
+
+          echo "[+] Extracting..."
+          rm -rf "$INSTALL_DIR"
+          mkdir -p "$INSTALL_DIR"
+          tar -xzf "$NVIM_TAR" --strip-components=1 -C "$INSTALL_DIR"
+
+          echo "[+] Linking binary..."
+          mkdir -p "$HOME/.local/bin"
+          ln -sf "$INSTALL_DIR/bin/nvim" "$HOME/.local/bin/nvim"
+
+          echo "[+] Updating PATH..."
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+          echo "[+] Verifying install..."
+          nvim --version
+       
+      - name: "⚙️ Setup LazyVim config (isolated)"
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          export NVIM_APPNAME="lazyvim"
+
+          CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}"
+          TARGET="$CONFIG_DIR/nvim/$NVIM_APPNAME"
+
+          echo "[+] Installing LazyVim into $TARGET"
+
+          rm -rf "$TARGET"
+          git clone --depth=1 https://github.com/LazyVim/starter "$TARGET"
+          rm -rf "$TARGET/.git"
+
+          test -f "$TARGET/init.lua"    
+
+      - name: "🧪 Run Tests (Includes Bash E2E validation)"
+        # cargo nextest  zero-overhead > tests/integration_test.rs
+        run: cargo nextest run --all-features
+
+  security:
+    name: "🔐 [Security] Audit Dependencies"
+    runs-on: ubuntu-latest
+    # Removed `needs: quality` to run in parallel. Add back if you prefer strict sequential gating.
+    timeout-minutes: 10
+
+    steps:
+      - name: "🛒 Checkout Code"
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: "📦 Install cargo-audit"
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-audit
+
+      - name: "🛡️ Run Cargo Audit"
+        run: cargo audit
+        # continue-on-error: true # Advisories often don't block releases; set to false if you want hard failures.
+
+  planning:
+    name: "🏗️ [Release] Plan Validation"
+    runs-on: ubuntu-latest
+    # Removed `needs: quality` for parallel execution.
+    timeout-minutes: 15
+
+    steps:
+      - name: "🛒 Checkout Code"
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: "⚙️ Setup Rust"
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: "💾 Cache Rust Artifacts"
+        uses: Swatinem/rust-cache@v2
+
+      - name: "📦 Install cargo-dist"
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-dist
+
+      - name: "🔍 Verify cargo-dist installed"
+        run: dist --version
+
+      - name: "📋 Validate Release Plan"
+        run: dist plan --output-format=json
+        # Set to false if you want invalid plans to fail the CI immediately.
+        #continue-on-error: true
+
