@@ -221,6 +221,62 @@ jobs:
           echo "EOF" >> "$GITHUB_OUTPUT"
 
           cp dist-manifest.json "$BUILD_MANIFEST_NAME"
+      - name: Fix Homebrew Formula
+        shell: ruby
+        run: |
+          require 'json'
+          manifest = JSON.parse(File.read('dist-manifest.json'))
+          version = manifest['app_version']
+          
+          # Collect all artifacts from all releases
+          artifacts = manifest['releases'].flat_map { |r| r['artifacts'] }
+          
+          def find_asset(assets, target)
+            asset = assets.find { |a| a['target_triples']&.include?(target) && a['name']&.end_with?('.tar.gz') }
+            if asset.nil?
+              puts "::error::Could not find .tar.gz artifact for target #{target}"
+              exit 1
+            end
+            asset
+          end
+
+          arm_mac = find_asset(artifacts, 'aarch64-apple-darwin')
+          intel_mac = find_asset(artifacts, 'x86_64-apple-darwin')
+          linux_x86 = find_asset(artifacts, 'x86_64-unknown-linux-gnu')
+
+          formula_path = "target/distrib/nvimx.rb"
+          
+          formula = <<~RUBY
+            class Nvimx < Formula
+              desc "Fast and flexible Neovim profile manager"
+              homepage "https://github.com/zx0r/nvimx"
+              version "\#{version}"
+
+              if OS.mac? && Hardware::CPU.arm?
+                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{arm_mac['name']}"
+                sha256 "\#{arm_mac['checksum']}"
+              elsif OS.mac? && Hardware::CPU.intel?
+                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{intel_mac['name']}"
+                sha256 "\#{intel_mac['checksum']}"
+              elsif OS.linux? && Hardware::CPU.intel?
+                url "https://github.com/zx0r/nvimx/releases/download/v\#{version}/\#{linux_x86['name']}"
+                sha256 "\#{linux_x86['checksum']}"
+              end
+
+              license "MIT"
+
+              def install
+                bin.install "nvimx"
+              end
+
+              test do
+                system "\#{bin}/nvimx", "--version"
+              end
+            end
+          RUBY
+
+          File.write(formula_path, formula)
+          puts "Successfully fixed Homebrew formula at \#{formula_path}"
       - id: cargo-cyclonedx
         shell: bash
         run: |
@@ -372,3 +428,20 @@ jobs:
         with:
           persist-credentials: false
           submodules: recursive
+ 
+  publish-crate:
+    name: Publish to crates.io
+    if: ${{ needs.release.outputs.rc == 'false' }}
+    runs-on: ubuntu-latest
+    needs: release
+
+    permissions:
+      contents: read
+      id-token: write 
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Publish
+        run: cargo publish

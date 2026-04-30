@@ -6,21 +6,17 @@ repository = "https://github.com/zx0r/nvimx"
 description = "Fast and flexible Neovim profile manager"
 homepage = "https://github.com/zx0r/nvimx"
 authors = ["zx0r <admin@zx0r.io>"]
-license = "MIT"
-
-[package.metadata.wix]
-upgrade-guid = "22D1B7C6-1B19-4BA3-B8A2-509D6542E293"
-path-guid = "B2B023F7-9CC2-4FA5-A4A8-2591408C8619"
-license = false
-eula = false
+license = "MIT OR Apache-2.0"
+categories = ["command-line-utilities"]
+keywords = ["nvimx", "nvim", "neovim", "cli", "profile-manager", "dotfiles"]
 
 [workspace]
 members = ["."]
 
-# The profile that 'dist' will build with
-[profile.dist]
-inherits = "release"
-lto = "thin"
+[profile.release]
+lto = true
+strip = true
+opt-level = "z"
 
 [[bin]]
 name = "nvimx"
@@ -44,3 +40,6 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 indicatif = "0.18"
 
+[dev-dependencies]
+pretty_assertions = "1.4.0"
+rand = "0.9.0"

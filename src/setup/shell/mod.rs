@@ -90,15 +90,15 @@ fn install_completions(shell: ShellType, dry_run: bool) -> Result<()> {
     let (path, content) = match shell {
         ShellType::Fish => (
             home.join(".config/fish/completions/nvimx.fish"),
-            include_str!("../../../completions/nvimx.fish"),
+            include_str!("../../../assets/completions/nvimx.fish"),
         ),
         ShellType::Zsh => (
             home.join(".zsh/completions/_nvimx"),
-            include_str!("../../../completions/_nvimx"),
+            include_str!("../../../assets/completions/_nvimx"),
         ),
         ShellType::Bash => (
             home.join(".bash_completion.d/nvimx"),
-            include_str!("../../../completions/nvimx.bash"),
+            include_str!("../../../assets/completions/nvimx.bash"),
         ),
     };
 

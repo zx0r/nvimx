@@ -1,12 +1,19 @@
-use clap::{CommandFactory, Parser, Subcommand, builder::styling::*};
+use clap::builder::styling::{AnsiColor, Style, Styles};
+use clap::{CommandFactory, Parser, Subcommand};
 use clap_complete::{Shell, generate};
 use std::io;
 
-const STYLES: clap::builder::Styles = clap::builder::Styles::styled()
-    .header(AnsiColor::BrightWhite.on_default().bold())
-    .usage(AnsiColor::BrightWhite.on_default().bold())
-    .literal(AnsiColor::Green.on_default().bold())
-    .placeholder(AnsiColor::White.on_default());
+/// Professional CLI styling for nvimx.
+/// Bold headers, no colors for commands/args.
+/// Respects terminal capabilities and NO_COLOR.
+const HEADER: Style = AnsiColor::BrightWhite.on_default().bold();
+const RESET: Style = Style::new();
+
+const STYLES: Styles = Styles::styled()
+    .header(HEADER)
+    .usage(HEADER)
+    .literal(Style::new())
+    .placeholder(Style::new());
 
 #[derive(Parser)]
 #[command(
@@ -14,40 +21,33 @@ const STYLES: clap::builder::Styles = clap::builder::Styles::styled()
     version = "0.1.0",
     styles = STYLES,
     about = "Zero-overhead Neovim profile manager",
-    after_help = format!("\x1b[1mFor more information:\x1b[0m \x1b[36mhttps://github.com/zx0r/nvimx\x1b[0m"),
-    override_usage = "nvimx <profile> [args...]\n  nvimx <command>",
+    after_help = "For more information: https://github.com/zx0r/nvimx",
+    override_usage = "nvimx [PROFILE] [FILES...][-- ARGS...]\n  nvimx <COMMAND> [ARGS...]",
     args_conflicts_with_subcommands = true,
     disable_help_subcommand = true,
-    help_template = "\
-{about} 
+    help_template = format!(
+        "\
+{{about-section}}
 
-nvimx is a transparent profile manager and launcher for Neovim.
-It imposes zero restrictions on native Neovim functionality. 
-Profile management is implemented as a seamless overlay: plugins, configs,
-LSPs, DAPs, and CLI flags work exactly as if you called nvim directly.
+{{usage-heading}}
+  {{usage}}
 
-\x1b[1mUsage:\x1b[0m
-  {usage}
+{bold}Commands:{reset}  
+{{subcommands}}
 
-\x1b[1mCommands:\x1b[0m
-  \x1b[1;32mlist\x1b[0m         List available profiles
-  \x1b[1;32minstall\x1b[0m      Install a profile from a repository or registry
-  \x1b[1;32mclean\x1b[0m        Remove profile data (config, cache, state)
-  \x1b[1;32mdoctor\x1b[0m       Diagnose environment and dependencies
-  \x1b[1;32msetup\x1b[0m        Initialize environment and onboarding
-  \x1b[1;32msandbox\x1b[0m      Run a profile in an isolated environment
-  \x1b[1;32mregistry\x1b[0m     Inspect and validate configured registries
-  \x1b[1;32mupdate\x1b[0m       Update nvimx to the latest version
-  \x1b[1;32mcompletions\x1b[0m  Generate shell completion scripts
+{bold}Arguments:{reset}
+  [PROFILE]     Profile to run (defaults to configured profile)
+  [FILES...]    Files to open
+  [ARGS...]     Arguments passed to Neovim (after `--`)
 
-\x1b[1mArguments:\x1b[0m
-  [PROFILE]    Profile to run (defaults to configured profile)
-  [ARGS]...    Arguments passed to Neovim
+{bold}Options:{reset}  
+{{options}}
 
-\x1b[1mOptions:\x1b[0m
-  -h, --help     Show help
-  -V, --version  Show version
-"
+{{after-help}}
+",
+        bold = HEADER.render(),
+        reset = RESET.render_reset(),
+    )
 )]
 pub struct Cli {
     /// Profile name to run (defaults to configured profile)
@@ -63,6 +63,7 @@ pub struct Cli {
 }
 
 #[derive(Subcommand)]
+#[command(subcommand_help_heading = "Commands")]
 pub enum Commands {
     /// List all locally installed profiles
     List {
@@ -97,7 +98,7 @@ pub enum Commands {
         #[command(subcommand)]
         command: Option<SetupCommands>,
     },
-    /// Run a profile in a fully isolated, disposable environment
+    /// Run a profile in an isolated environment
     Sandbox {
         /// Profile name or repository URL to sandbox
         profile: String,
@@ -170,10 +171,10 @@ pub enum CacheCommands {
 pub fn print_completions(shell: Shell) {
     match shell {
         Shell::Zsh => {
-            print!("{}", include_str!("../completions/_nvimx"));
+            print!("{}", include_str!("../assets/completions/_nvimx"));
         }
         Shell::Fish => {
-            print!("{}", include_str!("../completions/nvimx.fish"));
+            print!("{}", include_str!("../assets/completions/nvimx.fish"));
         }
         Shell::Bash => {
             let mut cmd = Cli::command();

@@ -13,10 +13,10 @@ When a profile is selected, `nvimx` overrides the following environment variable
 
 | Variable | Target Directory | Purpose |
 | :--- | :--- | :--- |
-| `XDG_CONFIG_HOME` | `~/.config/nvimx/profiles/<name>` | Configuration files (`init.lua`, etc) |
-| `XDG_DATA_HOME` | `~/.local/share/nvimx/profiles/<name>` | Plugins, undo files, and shada |
-| `XDG_STATE_HOME` | `~/.local/state/nvimx/profiles/<name>` | Session state and logs |
-| `XDG_CACHE_HOME` | `~/.cache/nvimx/profiles/<name>` | Bytecode and plugin cache |
+| `XDG_CONFIG_HOME` | `~/.config/nvim/profiles/<name>` | Configuration files (`init.lua`, etc) |
+| `XDG_DATA_HOME` | `~/.local/share/nvim/profiles/<name>` | Plugins, undo files, and shada |
+| `XDG_STATE_HOME` | `~/.local/state/nvim/profiles/<name>` | Session state and logs |
+| `XDG_CACHE_HOME` | `~/.cache/nvim/profiles/<name>` | Bytecode and plugin cache |
 
 ---
 

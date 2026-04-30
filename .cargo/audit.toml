@@ -1,0 +1,5 @@
+[advisories]
+ignore = [] # No active vulnerabilities found in current dependencies
+
+[database]
+fetch = true # Automatically fetch the latest advisory database
