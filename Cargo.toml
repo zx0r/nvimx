@@ -18,6 +18,12 @@ lto = true
 strip = true
 opt-level = "z"
 
+# The profile that 'dist' will use to build
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
+
 [[bin]]
 name = "nvimx"
 path = "src/main.rs"
