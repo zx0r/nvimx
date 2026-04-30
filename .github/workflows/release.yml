@@ -486,10 +486,10 @@ jobs:
     # =========================================================================
     
     # [UNCOMMENT AFTER SETUP]
-    # environment: crates.io
-    # permissions:
-    #   contents: read    # Required to checkout the code
-    #   id-token: write   # Required to request JWT token from GitHub OIDC
+    environment: crates.io
+    permissions:
+       contents: read    # Required to checkout the code
+       id-token: write   # Required to request JWT token from GitHub OIDC
     
     steps:
       - name: Checkout code
@@ -502,11 +502,11 @@ jobs:
         shell: bash
         #[UNCOMMENT AFTER SETUP AND REMOVE ECHO COMMANDS]
         run: |
-          echo "⚠️ ACTION REQUIRED: OIDC is not yet configured!"
-          echo "Please follow the 4-phase manual in the workflow comments above."
-          echo "After completion, replace this step with: cargo publish"
-          exit 1 
-          # cargo publish
+          # echo "⚠️ ACTION REQUIRED: OIDC is not yet configured!"
+          # echo "Please follow the 4-phase manual in the workflow comments above."
+          # echo "After completion, replace this step with: cargo publish"
+          # exit 1 
+          cargo publish
 
 
   announce:
