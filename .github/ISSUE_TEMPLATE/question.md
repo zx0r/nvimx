@@ -1,6 +1,6 @@
 ---
 name: Question
-about: Ask a question about 'bat'.
+about: Ask a question about 'nvimx'.
 title: ''
 labels: question
 assignees: ''
@@ -8,4 +8,4 @@ assignees: ''
 ---
 
 <!-- Using a normal ticket is still fine, but feel free to ask your
-questions about bat on https://github.com/sharkdp/bat/discussions instead. -->
+questions about bat on https://github.com/zx0r/nvimx/discussions instead -->
