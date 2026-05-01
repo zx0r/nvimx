@@ -12,16 +12,13 @@
 
 ##### 1. Installation
 
-**macOS / Linux (Homebrew)**
-
 ```bash
+# macOS / Linux (Homebrew)
 brew install zx0r/tap/nvimx
 ```
 
-
-**Rust Toolchain (Cargo)**
-
 ```bash
+# Rust Toolchain (Cargo)
 cargo install nvimx
 ```
 
@@ -91,7 +88,7 @@ EXAMPLES:
    nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
 ```
 
-### Core Commands
+### Commands
 
 ```bash
 Commands:
