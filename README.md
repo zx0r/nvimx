@@ -113,11 +113,10 @@ Commands:
 #### Configuration
 
 * strong defaults. zero-config
-* If no profile is specified, an interactive picker (fzf) is used automatically
-
-**Optional configuration file:**
+* if no profile is specified, an interactive picker (fzf) is used automatically
 
 ```bash
+# Optional configuration file
 cp config.example.toml ~/.config/nvimx/config.toml
 ```
 
@@ -130,11 +129,6 @@ registry_url = "https://raw.githubusercontent.com/zx0r/nvimx-registry/main/index
 ```
 
 #### Sandbox Mode
-
-* **Volatile State**: Wipes previous sandbox state before execution
-* **Environment Context**: Exports `NVIMX_SANDBOX` for use in configuration logic
-* **XDG Overrides**: Forcibly separates `XDG_CONFIG_HOME`, `DATA`, `STATE`, and `CACHE`
-
 
 ```shell
 # The `sandbox` command executes a profile in a temporary environment
