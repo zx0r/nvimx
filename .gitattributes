@@ -1,0 +1,20 @@
+# docs / meta
+*.md linguist-documentation
+LICENSE linguist-documentation
+
+# assets
+assets/** linguist-vendored
+*.gif linguist-vendored
+*.png linguist-vendored
+*.jpg linguist-vendored
+*.mp4 linguist-vendored
+
+# config / noise
+*.json linguist-vendored
+*.toml linguist-vendored
+*.lock linguist-vendored
+
+# shell scripts
+scripts/** linguist-vendored
+tests/** linguist-vendored
+
