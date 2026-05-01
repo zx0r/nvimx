@@ -2,6 +2,8 @@
 
 This guide provides technical details on the architecture, configuration, and operation of **nvimx**.
 
+> Install, manage and run Neovim configurations as fully isolated environments: reproducible, conflict-free, and without touching your existing setup.nvimx treats each config as a self-contained workspace: no shared state, no global mutations, and no behavioral differences from native nvim.
+
 ---
 
 ## 1. Core Architecture
@@ -13,10 +15,10 @@ When a profile is selected, `nvimx` overrides the following environment variable
 
 | Variable | Target Directory | Purpose |
 | :--- | :--- | :--- |
-| `XDG_CONFIG_HOME` | `~/.config/nvim/profiles/<name>` | Configuration files (`init.lua`, etc) |
-| `XDG_DATA_HOME` | `~/.local/share/nvim/profiles/<name>` | Plugins, undo files, and shada |
-| `XDG_STATE_HOME` | `~/.local/state/nvim/profiles/<name>` | Session state and logs |
-| `XDG_CACHE_HOME` | `~/.cache/nvim/profiles/<name>` | Bytecode and plugin cache |
+| `XDG_CONFIG_HOME` | `~/.config/nvim/<profile>` | Configuration files (`init.lua`, etc) |
+| `XDG_DATA_HOME` | `~/.local/share/nvim/<profile>` | Plugins, undo files, and shada |
+| `XDG_STATE_HOME` | `~/.local/state/nvim/<profile>` | Session state and logs |
+| `XDG_CACHE_HOME` | `~/.cache/nvim/<profile>` | Bytecode and plugin cache |
 
 ---
 
