@@ -149,5 +149,5 @@ nvimx lazyvim --headless -c "lua print(vim.fn.stdpath('config'))" +qa
 you bring args → we don't touch them  
 you choose a profile → we don't leak state
 
-that's it.
+that's it... happy coding...
 ```
