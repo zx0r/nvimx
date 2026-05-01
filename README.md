@@ -3,7 +3,7 @@
 </p>
 
 <h2 align="center">
-  Run Neovim configurations in fully isolated environments
+  Stop juggling configs → run Neovim side-by-side in isolation
 </h2>
 
 
