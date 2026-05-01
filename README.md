@@ -2,7 +2,7 @@
   <img src="./assets/images/nvimx-banner.png" width="" height="" alt="nvimx og graph" />
 </p>
 
-### Run Neovim configurations as isolated environments without conflicts or global state
+## Run Neovim configurations as isolated environments without conflicts or global state
 
  [![Latest Release](https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a)](https://github.com/zx0r/nvimx/releases) [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a)](LICENSE) [![Rust](https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a)](https://www.rust-lang.org/) [![Neovim](https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a)](https://neovim.io/) [![XDG Compliance](https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a)](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) [![Hacker News](https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a)](https://news.ycombinator.com/) [![r/unixporn](https://img.shields.io/badge/R%2FUNIXPORN-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000)](https://reddit.com/r/unixporn)
  
@@ -10,7 +10,7 @@
 
 ### Quick Start
 
-#### 1. Installation
+##### 1. Installation
 
 **macOS / Linux (Homebrew)**
 
@@ -25,13 +25,13 @@ brew install zx0r/tap/nvimx
 cargo install nvimx
 ```
 
-#### 2. Initialization
+##### 2. Initialization
 
 ```bash
 nvimx setup
 ```
 
-#### 3. Shell Integration (Recommended)
+##### 3. Shell Integration (Recommended)
 
 ```bash
 nvimx setup shell
@@ -91,7 +91,7 @@ EXAMPLES:
    nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
 ```
 
-#### Core Commands
+### Core Commands
 
 ```bash
 Commands:
@@ -108,7 +108,7 @@ Commands:
 
 ---
 
-#### Configuration
+### Configuration
 
 * strong defaults. zero-config
 * if no profile is specified, an interactive picker (fzf) is used automatically
@@ -126,7 +126,7 @@ default_profile = "lazyvim"
 registry_url = "https://raw.githubusercontent.com/zx0r/nvimx-registry/main/index.json"
 ```
 
-#### Sandbox Mode
+### Sandbox Mode
 
 ```shell
 # The `sandbox` command executes a profile in a temporary environment
@@ -135,7 +135,7 @@ nvimx sandbox lazyvim
 
 ---
 
-##### [ n v i m x ] 
+#### [ n v i m x ] 
 
 <p align="center">
   <img src="./assets/gif/nvimx-demo.gif" width="360" height="" alt="nvimx demo" />
