@@ -9,10 +9,12 @@
 ---
 
 <p align="center">
-  <a href="./assets/video/nvimx-demo.mp4">
-    <img src="./assets/gif/nvimx-preview.gif" width="" alt="nvimx previw animation">
+  <a href="https://raw.githack.com/zx0r/nvimx/main/assets/video/nvimx-demo.mp4">
+    <img src="./assets/gif/nvimx-preview.gif">
   </a>
 </p>
+
+---
 
 #### Quick Start
 
