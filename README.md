@@ -1,13 +1,4 @@
 <p align="center">
-  <img src="./assets/images/nvimx-banner.png" style="border-radius: 8px" width="" height="" alt="nvimx opengraph" />
-</p>
-
-<h2 align="center">
-  Stop juggling configs → run Neovim side-by-side in isolation
-</h2>
-
-
-<p align="center">
   <a href="https://github.com/zx0r/nvimx/releases">
     <img src="https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a" />
   </a>
@@ -30,6 +21,15 @@
     <img src="https://img.shields.io/badge/R%2FUNIXPORN-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000" />
   </a>
 </p>
+
+<p align="center">
+  <img src="./assets/images/nvimx-banner.png" style="border-radius: 8px" width="" height="" alt="nvimx opengraph" />
+</p>
+
+<h2 align="center">
+  Stop juggling configs → run Neovim side-by-side in isolation
+</h2>
+
 
 <p align="center">
   <a href="https://github.com/user-attachments/assets/c8e5853f-d98a-4951-aed8-1a8133172aa0">
