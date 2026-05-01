@@ -1,19 +1,46 @@
 <p align="center">
-  <img src="./assets/images/nvimx-banner.png" width="" height="" alt="nvimx opengraph" />
+  <img src="./assets/images/nvimx-banner.png" style="border-radius: 8px" width="" height="" alt="nvimx opengraph" />
 </p>
 
-### Run Neovim configurations as isolated environments without conflicts or global state
+<h2 align="center">
+  Run Neovim configurations in fully isolated environments
+</h2>
 
- [![Latest Release](https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a)](https://github.com/zx0r/nvimx/releases) [![License: MIT](https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a)](LICENSE) [![Rust](https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a)](https://www.rust-lang.org/) [![Neovim](https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a)](https://neovim.io/) [![XDG Compliance](https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a)](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html) [![Hacker News](https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a)](https://news.ycombinator.com/) [![r/unixporn](https://img.shields.io/badge/R%2FUNIXPORN-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000)](https://reddit.com/r/unixporn)
- 
----
 
 <p align="center">
-  <a href="https://raw.githack.com/zx0r/nvimx/main/assets/video/nvimx-demo.mp4">
-    <img src="./assets/gif/nvimx-preview.gif">
+  <a href="https://github.com/zx0r/nvimx/releases">
+    <img src="https://img.shields.io/github/v/release/zx0r/nvimx?color=4be1ff&label=RELEASE&style=flat-square&logo=github&labelColor=1a1a1a" />
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/badge/LICENSE-MIT-9fef00?style=flat-square&logo=opensourceinitiative&logoColor=white&labelColor=1a1a1a" />
+  </a>
+  <a href="https://www.rust-lang.org/">
+    <img src="https://img.shields.io/badge/CORE-RUST-orange?style=flat-square&logo=rust&logoColor=white&labelColor=1a1a1a" />
+  </a>
+  <a href="https://neovim.io/">
+    <img src="https://img.shields.io/badge/NVIM-0.10+-57A143?style=flat-square&logo=neovim&logoColor=white&labelColor=1a1a1a" />
+  </a>
+  <a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html">
+    <img src="https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a" />
+  </a>
+  <a href="https://news.ycombinator.com/">
+    <img src="https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a" />
+  </a>
+  <a href="https://reddit.com/r/unixporn">
+    <img src="https://img.shields.io/badge/R%2FUNIXPORN-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000" />
   </a>
 </p>
 
+<p align="center">
+  <a href="https://github.com/user-attachments/assets/c8e5853f-d98a-4951-aed8-1a8133172aa0">
+    <img 
+      src="./assets/gif/nvimx-preview.gif" style="border-radius: 8px" width="" 
+      alt="nvimx demo — run isolated Neovim configs side-by-side"
+    />
+  </a>
+</p>
+
+ 
 ---
 
 #### Quick Start
