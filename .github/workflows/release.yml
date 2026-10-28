@@ -64,7 +64,7 @@ jobs:
         # we specify bash to get pipefail; it guards against the `curl` command
         # failing. otherwise `sh` won't catch that `curl` returned non-0
         shell: bash
-        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.31.0/cargo-dist-installer.sh | sh"
+        run: "curl --proto '=https' --tlsv1.2 -LsSf https://github.com/axodotdev/cargo-dist/releases/download/v0.32.0/cargo-dist-installer.sh | sh"
       - name: Cache dist
         uses: actions/upload-artifact@v6
         with:
@@ -404,8 +404,8 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       PLAN: ${{ needs.plan.outputs.val }}
-      GITHUB_USER: "axo bot"
-      GITHUB_EMAIL: "admin+bot@axo.dev"
+      GITHUB_USER: ${{ github.actor }}
+      GITHUB_EMAIL: ${{ github.actor }}@users.noreply.github.com
     if: ${{ !fromJson(needs.plan.outputs.val).announcement_is_prerelease || fromJson(needs.plan.outputs.val).publish_prereleases }}
     steps:
       - uses: actions/checkout@v6
@@ -486,7 +486,9 @@ jobs:
     # =========================================================================
     
     # [UNCOMMENT AFTER SETUP]
-    environment: crates.io
+    environment:
+      name: crates.io
+      url: https://crates.io/crates/${{ github.event.repository.name }}
     permissions:
        contents: read    # Required to checkout the code
        id-token: write   # Required to request JWT token from GitHub OIDC
