@@ -17,6 +17,7 @@ keywords = ["nvimx", "neovim", "cli", "profile-manager", "dotfiles"]
 include = [
   "src/**/*.rs",
   "tests/**/*.rs",
+  "assets/completions/**/*",
   "Cargo.toml",
   "README.md",
   "LICENSE*",
