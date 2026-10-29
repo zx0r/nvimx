@@ -195,6 +195,7 @@ jobs:
       # Fails pipeline if total line coverage drops below 55% threshold
       - name: "Execute Isolated Tests with LLVM Coverage & Minimum Gate"
         run: |
+          mkdir -p target/llvm-cov
           cargo llvm-cov nextest \
             --locked \
             --profile ci \
