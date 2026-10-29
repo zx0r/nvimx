@@ -16,7 +16,7 @@ pub struct EnvLayout {
     pub profiles_dir: PathBuf,
     /// Calculated `XDG_CONFIG_HOME` for custom `profiles_dir` (§2.2)
     pub xdg_config_home: Option<PathBuf>,
-    /// Calculated `NVIM_APPNAME` ("nvim/<profile>")
+    /// Calculated `NVIM_APPNAME` (`nvim/<profile>`)
     pub nvim_appname: Option<String>,
 }
 
