@@ -1,11 +1,17 @@
 ---
 name: Question
-about: Ask a question about 'nvimx'.
-title: ''
-labels: question
+about: Ask a question regarding nvimx architecture, profile isolation, or configuration.
+title: "[QUESTION] "
+labels: ["question"]
 assignees: ''
-
 ---
 
-<!-- Using a normal ticket is still fine, but feel free to ask your
-questions about bat on https://github.com/zx0r/nvimx/discussions instead -->
+## Topic / Question
+<!-- What would you like to know or clarify? -->
+
+## Context
+<!-- Describe your workflow, shell (fish/zsh/bash), OS, or Neovim distro setups (e.g. LazyVim, AstroNvim, custom). -->
+
+---
+> [!TIP]
+> For general discussions, sharing profile tips, or community Q&A, you can also join the [GitHub Discussions](https://github.com/zx0r/nvimx/discussions).

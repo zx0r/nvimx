@@ -1,48 +1,37 @@
 ---
 name: Bug Report
-about: Report a bug.
-title: ""
-labels: bug
+about: Report a reproducible defect or unexpected behavior in nvimx.
+title: "[BUG] "
+labels: ["bug"]
 assignees: ''
-
 ---
 
-<!--
+## Description
+<!-- A clear and concise description of the bug. -->
 
-Hey there, thank you for reporting a bug!
+## Reproduction Steps
+1. Execute command: `nvimx <args>`
+2. Profile configuration used: `...`
+3. Observe error: `...`
 
--->
+## Expected Behavior
+<!-- What you expected nvimx to do (e.g. process replacement, profile launch, clean-up). -->
 
-**What steps will reproduce the bug?**
+## Diagnostic Environment
+Please run the following commands and paste the exact output:
 
-1. step 1
-2. step 2
-3. ...
+```console
+$ nvimx --version
+$ nvim --version | head -n 2
+$ uname -a
+```
 
-**What happens?**
+## Relevant Configuration
+<!-- Include ~/.config/nvimx/config.toml or custom profiles dir if applicable. -->
+```toml
+```
 
-...
-
-**What did you expect to happen instead?**
-
-...
-
-
-**How did you install `nvimx`?**
-
-<!-- homebrew, GitHub release, etc. -->
-
----
-
-**nvimx version and environment**
-
-<!--
-In order to reproduce your issue, please add some information about the environment
-in which you're running bat. To do this, run the full `nvimx` command that demonstrates
-the bug, and attach the `doctor` option:
-
-    nvimx [other options and arguments…] doctor
-
-Finally, paste the Markdown output here. Please make sure that it does not reveal any
-personal information.
--->
+## Terminal & Process Trace
+<!-- If applicable, paste terminal output, stderr or fish/zsh shell context. -->
+```console
+```

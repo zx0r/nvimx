@@ -1,17 +1,14 @@
 # nvimx completion (Bash)
 # ----------------------------------------
 # Installation:
-# nvimx completions bash > ~/.bash_completion.d/nvimx
-#
-# Then add to your .bashrc:
-# source ~/.bash_completion.d/nvimx
+# eval "$(nvimx init bash)"
 # ----------------------------------------
 
 _nvimx() {
     local cur opts profiles
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    opts="list install clean doctor sandbox registry update completions help -h --help -V --version"
+    opts="list ls install clean init sandbox -h --help -V --version"
     
     # Root: commands + profiles
     if [[ ${COMP_CWORD} -eq 1 ]]; then
@@ -20,9 +17,9 @@ _nvimx() {
         return 0
     fi
     
-    # Registry subcommands
-    if [[ "${COMP_WORDS[1]}" == "registry" && ${COMP_CWORD} -eq 2 ]]; then
-        COMPREPLY=( $(compgen -W "list check update clear" -- "${cur}") )
+    # Subcommands
+    if [[ "${COMP_WORDS[1]}" == "init" && ${COMP_CWORD} -eq 2 ]]; then
+        COMPREPLY=( $(compgen -W "fish zsh bash" -- "${cur}") )
         return 0
     fi
 

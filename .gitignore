@@ -1,34 +1,28 @@
 # =========================
-# Rust
+# Rust & Build
 # =========================
-src.BAK/
 target/
+dist/
+.cargo-dist/
+src.BAK/
 **/*.rs.bk
-
-# Cargo (keep lock for binaries)
-# DO NOT ignore Cargo.lock for CLI tools
 
 # =========================
 # OS / Editor junk
 # =========================
 .DS_Store
 Thumbs.db
-
-# VSCode
 .vscode/
-
-# JetBrains
 .idea/
-
-# Neovim swap / backup
 *.swp
 *.swo
+*.tmp
 *~
 
 # =========================
 # Logs / temp
 # =========================
-.log
+*.log
 tmp/
 temp/
 
@@ -36,14 +30,13 @@ temp/
 # Env / secrets
 # =========================
 .env
-.env.
+.env.*
 *.key
 *.pem
 
 # =========================
-# Build artifacts (extra safety)
+# Build artifacts
 # =========================
-dist/
 *.tar.gz
 *.zip
 
@@ -52,17 +45,12 @@ dist/
 # =========================
 coverage/
 *.prof
+*.profraw
+*.profdata
 *.gcda
 *.gcno
 
 # =========================
-# Local configs (optional)
+# Local configuration
 # =========================
 config.toml
-
-# =========================
-# Optional:
-# =========================
-brain/
-.gemini/
-.serena/

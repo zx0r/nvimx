@@ -20,14 +20,11 @@ _nvimx_commands() {
   local -a commands
   commands=(
     'list:List profiles'
+    'ls:List profiles'
     'install:Install a profile'
     'clean:Remove profile data'
-    'doctor:Check system health'
+    'init:Initialize environment or completions'
     'sandbox:Run isolated environment'
-    'registry:Manage registries'
-    'update:Update nvimx'
-    'completions:Generate completions'
-    'help:Show help'
   )
   _describe 'command' commands
 }
@@ -48,18 +45,11 @@ _nvimx() {
       ;;
     args)
       case $words[2] in
-        install|clean|sandbox)
+        clean|sandbox)
           _nvimx_profiles
           ;;
-        registry)
-          _describe 'subcommand' \
-            'list:List registries' \
-            'check:Check registry health' \
-            'update:Force registry update' \
-            'clear:Clear registry cache'
-          ;;
-        help)
-          _nvimx_commands
+        init)
+          _values 'shell' fish zsh bash
           ;;
       esac
       ;;

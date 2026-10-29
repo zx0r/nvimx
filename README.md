@@ -57,21 +57,21 @@ brew install zx0r/tap/nvimx
 cargo install nvimx
 ```
 
-##### 2. Initialization
+##### 2. Initialization & Shell Completions
 
 ```bash
-nvimx setup
-```
+# Initialize environment
+nvimx init
 
-##### 3. Shell Integration (Recommended)
-
-```bash
-nvimx setup shell
+# Shell completions
+nvimx init fish | source   # Fish (~/.config/fish/config.fish)
+eval "$(nvimx init zsh)"  # Zsh (~/.zshrc)
+eval "$(nvimx init bash)" # Bash (~/.bashrc)
 ```
 
 ---
 
-#### 0verview
+#### Overview
 
 **It works as a transparent layer over Neovim:**
 
@@ -83,21 +83,16 @@ Each profile is completely independent, enabling reproducible and conflict-free 
 
 #### Features
 
-* profile install from Git or registry
+* profile install from built-in preset (`.rodata`) or Git
 * sandbox execution (ephemeral environments)
-* environment diagnostics (`doctor`) 
-* registry inspection
 * shell completion
 
 ```bash
-# Install from Git (available)
-nvimx install https://github.com/LazyVim/starter lazyvim
+# Install from built-in preset (.rodata)
+nvimx install lazyvim lazyvim
 
-# Install from registry (planned)
-nvimx install lazyvim
-
-# Set default profile (planned)
-nvimx use lazyvim
+# Install from Git repository
+nvimx install <repo-url> <profile-name>
 ```
 
 ---
@@ -119,7 +114,7 @@ Arguments:
 EXAMPLES:
    nvimx                         # Launch with default profile
    nvimx list                    # List available profiles  
-   nvimx lazyvim main.py         # Open main.py using the 'python' profile
+   nvimx lazyvim main.py         # Open main.py using the 'lazyvim' profile
    nvimx -- -c 'echo "hello"'    # Pass arguments directly to nvim
 ```
 
@@ -127,15 +122,16 @@ EXAMPLES:
 
 ```bash
 Commands:
-  list         List all locally installed profiles
-  install      Install a new profile from a git repository or registry
+  list, ls     List all locally installed profiles
+  install      Install a new profile from a git repository or preset
   clean        Safely remove data, state, and cache for a profile
-  doctor       Check system dependencies and environment health
-  setup        Initialize environment, config, and install initial profiles
+  init         Output shell completions for fish, zsh, or bash
   sandbox      Run a profile in an isolated environment
-  registry     Inspect and manage configured profile registries
-  update       Self-update the nvimx binary to the latest version
-  completions  Generate auto-completion scripts for your shell
+
+Shell completions:
+  Fish: nvimx init fish | source
+  Zsh:  eval "$(nvimx init zsh)"
+  Bash: eval "$(nvimx init bash)"
 ```
 
 ---
@@ -153,9 +149,6 @@ cp config.example.toml ~/.config/nvimx/config.toml
 ```toml
 # Default profile (skips fzf when set)
 default_profile = "lazyvim"
-
-# Remote registry for profile installation
-registry_url = "https://raw.githubusercontent.com/zx0r/nvimx-registry/main/index.json"
 ```
 
 #### Sandbox Mode

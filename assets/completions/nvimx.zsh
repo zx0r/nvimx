@@ -13,14 +13,11 @@ _nvimx() {
     local -a cmds
     cmds=(
         'list:List profiles'
+        'ls:List profiles'
         'install:Install profile'
         'clean:Clean profile data'
-        'doctor:Check system health'
+        'init:Initialize environment or completions'
         'sandbox:Run profile in isolated environment'
-        'registry:Manage registries'
-        'update:Update nvimx'
-        'completions:Generate completions'
-        'help:Show help'
     )
 
     _arguments -C \

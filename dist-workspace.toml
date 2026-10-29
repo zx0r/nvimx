@@ -1,78 +1,70 @@
-# Reference configuration for 'dist' (cargo-dist)
-# Generated as a professional standard for nvimx
-
 [workspace]
 members = ["cargo:."]
 
 [dist]
-# The preferred dist version to use in CI
-cargo-dist-version = "0.32.0"
-
-# Allow manual modifications to CI workflows
+# Pinned cargo-dist version executing in CI runners
+cargo-dist-version = "0.33.1"
 allow-dirty = ["ci"]
 
-# CI backends to support
+# Target CI engine
 ci = ["github"]
 
-# The installers to generate for each app
-installers = ["shell", "homebrew"]
+# CI execution behavior on Pull Requests:
+# - "plan": Dry-runs build matrix calculation without actual compilation
+# - "upload": Builds artifacts and attaches them to PR run summary
+# - "skip": Disables PR execution
+pr-run-mode = "plan"
 
-# Publish jobs to run in CI
+precise-cli-versions = true
+
+# Publish Jobs
 publish-jobs = ["homebrew"]
 
-# A GitHub repo to push Homebrew formulas to
-tap = "zx0r/homebrew-tap"
-
-# Checksum algorithm for archives (standard: sha256)
-checksum = "sha256"
-
-# The archive format to use for non-windows builds
-unix-archive = ".tar.gz"
-
-# Whether to embed dependency information using cargo-auditable
-# Set to false to avoid extra tool dependencies in CI
-cargo-auditable = false
-
-# Whether to use cargo-cyclonedx to generate an SBOM for security
-cargo-cyclonedx = true
-
-# Build only the required packages, and individually
-precise-builds = true
-
-# Use zig for easy cross-compilation on Linux
-zig = true
-
-# Path that installers should place binaries in (CARGO_HOME is standard for Rust)
-install-path = "CARGO_HOME"
-
-# Whether to install an updater program with shell installers
-install-updater = true
-
-# Custom message shown after successful installation
-install-success-msg = "nvimx is installed! Run 'nvimx --help' to get started."
-
-# Whether builds should be cached in CI for speed
-cache-builds = true
-
-# Target platforms to build apps for (Modern multi-platform support)
+# Target Platform Triples
 targets = [
-    "aarch64-apple-darwin",
-    "x86_64-apple-darwin",
-    "aarch64-unknown-linux-gnu",
-    "aarch64-unknown-linux-musl",
-    "x86_64-unknown-linux-gnu",
-    "x86_64-unknown-linux-musl",
+  "x86_64-unknown-linux-gnu",
+  "x86_64-unknown-linux-musl",
+  "aarch64-unknown-linux-gnu",
+  "aarch64-unknown-linux-musl",
+  "x86_64-apple-darwin",
+  "aarch64-apple-darwin",
+  "x86_64-pc-windows-msvc",
+  "aarch64-pc-windows-msvc"
 ]
 
-# Whether to sign macOS executables (Requires Apple Developer Certificate)
-macos-sign = false
+# Installers Generated in Global Phase
+installers = [
+  "shell",
+  "powershell",
+  "homebrew"
+]
 
-# Provide SLSA provenance/attestations from GitHub for security
+# Destination path where shell/ps1 scripts place binaries
+install-path = ["$CARGO_HOME/bin", "~/.local/bin"]
+
+# Companion in-place auto-updater (<bin>-update binary)
+install-updater = true
+
+# Archive Compression
+windows-archive = ".zip"
+unix-archive = ".tar.xz"
+
+# Homebrew Tap Repository
+tap = "zx0r/homebrew-tap"
+formula = "nvimx"
+
+# Supply Chain Provenance (SLSA Level 3 via GitHub Attestations)
 github-attestations = true
+github-attestations-phase = "announce"
 
+# Embed dependency graph into compiled binaries for runtime vulnerability scanners
+cargo-auditable = true
+
+# GitHub Actions Runner Machine Mapping
 [dist.github-custom-runners]
-# Optimized runners for specific architectures
+global = "ubuntu-22.04"
 aarch64-apple-darwin = "macos-14"
-x86_64-apple-darwin = "macos-14"
-aarch64-unknown-linux-gnu = "ubuntu-24.04-arm"
-x86_64-unknown-linux-gnu = "ubuntu-24.04"
+x86_64-apple-darwin = "macos-13"
+x86_64-unknown-linux-gnu = "ubuntu-22.04"
+x86_64-unknown-linux-musl = "ubuntu-22.04"
+x86_64-pc-windows-msvc = "windows-2022"
