@@ -47,7 +47,7 @@ install-updater = true
 
 # Archive Compression
 windows-archive = ".zip"
-unix-archive = ".tar.xz"
+unix-archive = ".tar.gz"
 
 # Homebrew Tap Repository
 tap = "zx0r/homebrew-tap"
