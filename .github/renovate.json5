@@ -128,12 +128,23 @@
       labels: ["ci", "dependencies"],
     },
     {
-      // Neovim E2E Runtime: Tracks upstream release tags
-      // Checksum is verified cryptographically via sha256sum in Gate 3
-      description: "Track Neovim release tag in workflow environment",
+      // Neovim E2E Runtime: Atomic Update of Tag AND Cryptographic SHA-256 Digest
+      // THREAT MODEL: Upstream GitHub releases expose binary tarballs whose SHA256 checksums
+      // must match exactly. Changing NVIM_VERSION without updating NVIM_SHA256 causes strict
+      // sha256sum verification failure in Gate 3.
+      // IMPLEMENTATION: postUpgradeTasks executes in a trusted self-hosted runner environment
+      // to calculate the SHA256 of the new tarball and perform an in-place sed substitution.
+      description: "Update Neovim version and recalculate NVIM_SHA256 atomically in the same commit",
       matchDepNames: ["neovim/neovim"],
       groupName: "neovim-e2e-runtime",
       labels: ["ci", "e2e"],
+      postUpgradeTasks: {
+        commands: [
+          "bash -c 'set -euo pipefail; HASH=$(curl -fsSL --retry 3 \"https://github.com/neovim/neovim/releases/download/{{{newValue}}}/nvim-linux-x86_64.tar.gz\" | sha256sum | awk \"{print \\$1}\"); sed -i -E \"s/(NVIM_SHA256:\\s*[\\\"\\x27])[a-f0-9]{64}([\\\"\\x27])/\\1${HASH}\\2/g\" .github/workflows/*.yml'",
+        ],
+        fileFilters: [".github/workflows/*.yml", ".github/workflows/*.yaml"],
+        executionMode: "branch",
+      },
     },
   ],
 }

@@ -1,7 +1,7 @@
 # Principal+ Rust Engineering Standard: Configuration, Micro-Binary Optimization, Toolchain, Distribution & Lifecycle
 
 **Level:** Principal Systems Architect & Lead Platform Engineer  
-**Scope:** Modern Rust (1.75 – 1.85+, 2024 Edition Ready)  
+**Scope:** Modern Rust (1.85 – 1.96+, 2024 Edition Ready)  
 **Standard:** 100% Deterministic, Zero-Supply-Chain-Risk, Data-Oriented, Micro-Footprint Architecture  
 
 ---
@@ -22,7 +22,7 @@ This specification establishes the **canonical industrial benchmark** for design
 ## 2. Manifest & Workspace Governance (`Cargo.toml`)
 
 ### 2.1. Resolver 3 (`resolver = "3"`) & MSRV Awareness
-Introduced in Rust 1.84/1.85 as the default for `edition = "2024"`:
+Introduced in Rust 1.84/1.85 (stabilized in 1.96.0) as the default for `edition = "2024"`:
 * **Feature Decoupling:** Build dependencies (`build-dependencies`) and development test dependencies (`dev-dependencies`) cannot artificially enable features in target production binaries.
 * **MSRV-Aware Dependency Resolution:** Cargo evaluates candidate dependencies against the declared `workspace.package.rust-version`. If a third-party dependency releases a new minor version bumping its MSRV beyond your pinned toolchain, `cargo update` automatically falls back to the latest MSRV-compatible release, preventing CI breakage.
 
@@ -45,7 +45,7 @@ resolver = "3"
 [workspace.package]
 version = "0.1.0"
 edition = "2024"
-rust-version = "1.85.0"
+rust-version = "1.96.0"
 authors = ["Principal Systems Architecture Group <systems@enterprise.internal>"]
 license = "Apache-2.0 OR MIT"
 readme = "README.md"
@@ -111,13 +111,18 @@ opt-level = 3
 lto = "fat"                    # Monolithic inter-procedural optimization across all crates
 codegen-units = 1              # Single codegen unit allows LLVM global dead-code elimination
 panic = "abort"                # Eliminates personality routines & unwind tables (-15% binary size)
-strip = "symbols"              # Strips symbol tables; leaves line info if debuginfo selected
+strip = "symbols"              # Strips both symbol tables & debuginfo; use "debuginfo" if preserving backtrace symbols
 split-debuginfo = "off"
 incremental = false
 overflow-checks = false        # Max throughput; keep true for crypto/financial logic
 debug = false
 debug-assertions = false
 rpath = false
+
+# 2b. Distribution Profile (cargo-dist)
+[profile.dist]
+inherits = "release"
+lto = "fat"
 
 # 3. Micro-Release: Size-critical CLI utilities, embedded, WASM, and sidecars
 [profile.release-small]
@@ -151,7 +156,7 @@ opt-level = 3
 lto = "thin"
 
 # ------------------------------------------------------------------------------
-# Unified Static Lint Governance (RFC 3389 / Rust 1.74 - 1.85+)
+# Unified Static Lint Governance (RFC 3389 / Rust 1.74 - 1.96+)
 # ------------------------------------------------------------------------------
 [workspace.lints.rust]
 unsafe_code = "deny"
@@ -239,7 +244,7 @@ Binary bloat in Rust stems from five primary culprits: **unwind landing pads**, 
 | **Link-Time Optimization** | `lto = false` | `lto = "fat"` | Monolithic whole-program AST analysis; enables aggressive Cross-Crate Dead Code Elimination (DCE). |
 | **Codegen Partitions** | `codegen-units = 16` | `codegen-units = 1` | Single compilation unit allows LLVM to prove functions are unused and purge them globally. |
 | **Unwind Tables** | `panic = "unwind"` | `panic = "abort"` | Strips `.eh_frame`, exception personality routines, and landing pads ($-15\%$ to $-20\%$). |
-| **Symbol Tables** | Unstripped | `strip = "symbols"` / `true` | Strips ELF/Mach-O `.symtab`, `.strtab`, and DWARF debug sections ($-60\%$ to $-80\%$). |
+| **Symbol Tables** | Unstripped | `strip = "symbols"` / `true` (or `"debuginfo"`) | Strips ELF/Mach-O `.symtab`, `.strtab`, and DWARF sections ($-60\%$ to $-80\%$). Use `"debuginfo"` if backtrace symbols must be preserved. |
 
 ### 3.2. Eliminating `core::fmt` & Panic String Bloat
 The Rust formatting engine (`std::fmt::Display`, `format!`, `panic!("...")`) pulls in extensive string formatting tables, float-to-string algorithms (Ryū/Dragon4), and formatting buffers.
@@ -430,7 +435,7 @@ udeps = "+nightly udeps --workspace --all-targets"
 
 ```toml
 [toolchain]
-channel = "1.85.0"
+channel = "1.96.0"
 profile = "minimal"
 components = [
     "rustfmt",
@@ -454,7 +459,7 @@ targets = [
 ### 5.3. `clippy.toml` (Metric Thresholds & Primitive Bans)
 
 ```toml
-msrv = "1.85.0"
+msrv = "1.96.0"
 cognitive-complexity-threshold = 25
 cyclomatic-complexity-threshold = 20
 too-many-arguments-threshold = 7
@@ -492,7 +497,6 @@ disallowed-methods = [
 
 ```toml
 edition = "2024"
-version = "Two"
 max_width = 100
 hard_tabs = false
 tab_spaces = 4
@@ -502,23 +506,9 @@ use_field_init_shorthand = true
 use_try_shorthand = true
 reorder_imports = true
 reorder_modules = true
-
-unstable_features = true
-imports_granularity = "Crate"
-group_imports = "StdExternalCrate"
-wrap_comments = true
-comment_width = 90
-normalize_comments = true
-normalize_doc_attributes = true
-format_code_in_doc_comments = true
-doc_comment_code_block_width = 90
-format_strings = true
-empty_item_single_line = false
-struct_lit_single_line = false
-match_block_trailing_comma = true
-binop_separator = "Front"
-inline_attribute_next = true
 ```
+
+> **Note on Nightly Formatting:** Advanced AST formatting options (`imports_granularity`, `group_imports`, `wrap_comments`) require `unstable_features = true` and must be executed exclusively via `cargo +nightly fmt`. The baseline configuration above is 100% stable-compatible on Rust 1.96.0+.
 
 ### 5.5. `deny.toml` (`cargo-deny` Supply Chain Policy)
 
@@ -753,7 +743,7 @@ npm-scope = "@myorg"
 
 # Archive Compression
 windows-archive = ".zip"
-unix-archive = ".tar.xz"
+unix-archive = ".tar.gz"
 
 # Homebrew Tap Repository & Publish Jobs
 tap = "myorg/homebrew-tap"
@@ -769,12 +759,15 @@ cargo-auditable = true
 
 # GitHub Actions Runner Machine Mapping
 [dist.github-custom-runners]
-global = "ubuntu-22.04"
-aarch64-apple-darwin = "macos-14"
-x86_64-apple-darwin = "macos-13"
-x86_64-unknown-linux-gnu = "ubuntu-22.04"
-x86_64-unknown-linux-musl = "ubuntu-22.04"
-x86_64-pc-windows-msvc = "windows-2022"
+global = "ubuntu-latest"
+aarch64-apple-darwin = "macos-latest"
+x86_64-apple-darwin = "macos-latest"
+x86_64-unknown-linux-gnu = "ubuntu-latest"
+x86_64-unknown-linux-musl = "ubuntu-latest"
+aarch64-unknown-linux-gnu = "ubuntu-latest"
+aarch64-unknown-linux-musl = "ubuntu-latest"
+x86_64-pc-windows-msvc = "windows-latest"
+aarch64-pc-windows-msvc = "windows-latest"
 
 # Extra Custom Assets
 [[dist.extra-artifacts]]
@@ -874,7 +867,6 @@ permissions:
 env:
   CARGO_TERM_COLOR: "always"
   CARGO_INCREMENTAL: "0"
-  RUSTFLAGS: "-Dwarnings"
 
 jobs:
   # ----------------------------------------------------------------------------
@@ -882,38 +874,41 @@ jobs:
   # ----------------------------------------------------------------------------
   fast-checks:
     name: "Fast Quality Gates (Fmt, Clippy, Machete)"
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     steps:
       - name: "Checkout Source Code"
-        uses: "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683" # v4.2.2
+        uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
 
       - name: "Install Pinned Rust Toolchain"
         run: "rustup show"
 
       - name: "Setup Rust Cache"
-        uses: "Swatinem/rust-cache@82a92a6e8fbeee08c636dad57538f06d83bc89ee" # v2.7.5
+        uses: "Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0" # v2.9.3
         with:
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
       - name: "Verify Rust Formatting"
         run: "cargo fmt --all -- --check"
 
-      - name: "Run Clippy (Pedantic/Nursery)"
-        run: "cargo clippy --workspace --all-targets --all-features -- -D warnings"
+      - name: "Install cargo-machete"
+        uses: "taiki-e/install-action@86f7a0ffb25f40114606501a311ebcfaf882ea32" # v2.88.0
+        with:
+          tool: "cargo-machete@0.9.2"
 
       - name: "Detect Unused Dependencies"
-        run: |
-          curl -fsSL https://github.com/bnjbvr/cargo-machete/releases/latest/download/cargo-machete-v0.6.2-x86_64-unknown-linux-musl.tar.gz | tar -xz -C /usr/local/bin
-          cargo-machete
+        run: "cargo machete"
+
+      - name: "Run Clippy (Pedantic/Nursery)"
+        run: "cargo clippy --workspace --all-targets --all-features -- -D warnings"
 
   # ----------------------------------------------------------------------------
   # Gate 2: Supply Chain Security & License Policy
   # ----------------------------------------------------------------------------
   security-audit:
     name: "Supply Chain Audit (Cargo Deny)"
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683"
+      - uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
       - uses: "EmbarkStudios/cargo-deny-action@8371184b9282b7fd3378f16f800a444ce7288e5f" # v2.0.11
         with:
           command: "check"
@@ -925,13 +920,13 @@ jobs:
   test-and-coverage:
     name: "Tests (Nextest) & Source Coverage"
     needs: ["fast-checks", "security-audit"]
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     permissions:
       id-token: "write"
     steps:
-      - uses: "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683"
+      - uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
       - run: "rustup show"
-      - uses: "Swatinem/rust-cache@82a92a6e8fbeee08c636dad57538f06d83bc89ee"
+      - uses: "Swatinem/rust-cache@d1527c8f67ef9af357290475d4af4b0fab8f12e0" # v2.9.3
         with:
           save-if: ${{ github.ref == 'refs/heads/main' }}
 
@@ -956,7 +951,7 @@ jobs:
   miri-verification:
     name: "Memory Safety & Soundness (Miri)"
     needs: ["fast-checks"]
-    runs-on: "ubuntu-22.04"
+    runs-on: "ubuntu-latest"
     steps:
       - uses: "actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683"
       - name: "Install Nightly Miri"
