@@ -7,7 +7,6 @@
 #   - Conventional Commits 1.0.0: Specification enforcement via Cocogitto
 # Toolchain & Static Verification:
 #   - actionlint: Actions workflow AST validation with embedded ShellCheck
-#   - zizmor: Offline AST security scanner for GitHub Actions workflows
 #   - gitleaks: High-entropy secret and credential detection across Git deltas
 #   - cargo fmt & cargo clippy: Strict linting (-D warnings, all-targets, all-features)
 #   - cargo-machete: Unused crate dependency detection via AST analysis
@@ -85,10 +84,13 @@ jobs:
       - name: "Verify Workflow Syntax & ShellCheck (actionlint)"
         uses: "eifinger/actionlint-action@1fc89649be682d16ec5cf65ea16e269eb88d3982" # v1.10.2
 
-      - name: "Audit Workflow Security Patterns (zizmor)"
-        uses: "zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b" # v0.8.0
-        with:
-          advanced-security: false
+      # NOTE: zizmorcore/zizmor-action relies on pip/PyPI to download Python wheels at runtime,
+      # violating zero-trust egress block policies in a pure Rust runner environment.
+      # Workflow security SAST is enforced offline pre-commit via lefthook (zizmor --offline).
+      # - name: "Audit Workflow Security Patterns (zizmor)"
+      #   uses: "zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b" # v0.8.0
+      #   with:
+      #     advanced-security: false
 
       - name: "Scan Secrets & Credentials (gitleaks)"
         uses: "gitleaks/gitleaks-action@e0c47f4f8be36e29cdc102c57e68cb5cbf0e8d1e" # v3
