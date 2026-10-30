@@ -74,8 +74,7 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             github.com:443
-            objects.githubusercontent.com:443
-            raw.githubusercontent.com:443
+            *.githubusercontent.com:443
 
       - name: "Checkout Source Code (Full History for Audit & CC)"
         uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
@@ -124,12 +123,9 @@ jobs:
           allowed-endpoints: >
             api.github.com:443
             github.com:443
-            objects.githubusercontent.com:443
-            raw.githubusercontent.com:443
-            crates.io:443
-            index.crates.io:443
-            static.crates.io:443
-            static.rust-lang.org:443
+            *.githubusercontent.com:443
+            *.crates.io:443
+            *.rust-lang.org:443
 
       # Immutable commit SHA checkout prevents upstream tag tampering (OpenSSF L4)
       - name: "Checkout Source Code"
@@ -188,12 +184,9 @@ jobs:
           egress-policy: "block"
           allowed-endpoints: >
             api.github.com:443
-            crates.io:443
             github.com:443
-            index.crates.io:443
-            objects.githubusercontent.com:443
-            raw.githubusercontent.com:443
-            static.crates.io:443
+            *.githubusercontent.com:443
+            *.crates.io:443
 
       - name: "Checkout Source Code"
         uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
@@ -230,13 +223,10 @@ jobs:
           egress-policy: "block"
           allowed-endpoints: >
             api.github.com:443
-            crates.io:443
             github.com:443
-            index.crates.io:443
-            objects.githubusercontent.com:443
-            raw.githubusercontent.com:443
-            static.crates.io:443
-            static.rust-lang.org:443
+            *.githubusercontent.com:443
+            *.crates.io:443
+            *.rust-lang.org:443
 
       - name: "Checkout Source Code"
         uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
@@ -307,13 +297,10 @@ jobs:
           egress-policy: "block"
           allowed-endpoints: >
             api.github.com:443
-            crates.io:443
             github.com:443
-            index.crates.io:443
-            objects.githubusercontent.com:443
-            raw.githubusercontent.com:443
-            static.crates.io:443
-            static.rust-lang.org:443
+            *.githubusercontent.com:443
+            *.crates.io:443
+            *.rust-lang.org:443
 
       - name: "Checkout Source Code"
         uses: "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1" # v7.0.1
