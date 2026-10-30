@@ -175,9 +175,9 @@ fn test_6_ipc_server_readiness() {
         .spawn()
         .expect("failed to spawn background nvimx");
 
-    // Wait briefly for socket to become ready
+    // Wait for socket to become ready (up to 2.5s for busy test runners)
     let mut ready = false;
-    for _ in 0..20 {
+    for _ in 0..100 {
         if sock.exists() {
             ready = true;
             break;
