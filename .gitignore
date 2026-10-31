@@ -54,3 +54,8 @@ coverage/
 # Local configuration
 # =========================
 config.toml
+
+# =========================
+# Specifications & Task drafts
+# =========================
+specs/
