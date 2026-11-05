@@ -12,7 +12,6 @@ impl Config {
             use_fzf: true,
             log_level: LogLevel::Info,
             output_format: OutputFormat::Text,
-            auto_update: false,
             strict_mode: false,
             fallback_to_plain_nvim: true,
             profiles_dir: None,
@@ -74,11 +73,6 @@ impl Config {
                     "json" => cfg.output_format = OutputFormat::Json,
                     _ => {}
                 },
-                "auto_update" => {
-                    if let Ok(b) = val.parse::<bool>() {
-                        cfg.auto_update = b;
-                    }
-                }
                 "strict_mode" => {
                     if let Ok(b) = val.parse::<bool>() {
                         cfg.strict_mode = b;
@@ -146,7 +140,6 @@ mod tests {
             use_fzf = false
             log_level = "debug"
             output = "json"
-            auto_update = true
             strict_mode = true
             fallback_to_plain_nvim = false
             profiles_dir = "~/my_nvim_profiles"
@@ -162,7 +155,6 @@ mod tests {
         assert!(!cfg.use_fzf);
         assert_eq!(cfg.log_level, LogLevel::Debug);
         assert_eq!(cfg.output_format, OutputFormat::Json);
-        assert!(cfg.auto_update);
         assert!(cfg.strict_mode);
         assert!(!cfg.fallback_to_plain_nvim);
         assert_eq!(

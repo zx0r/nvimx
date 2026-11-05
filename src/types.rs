@@ -119,14 +119,12 @@ impl ShellKind {
 }
 
 /// Minimal in-memory configuration mapped from `config.toml`.
-#[allow(clippy::struct_excessive_bools)]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Config {
     pub default_profile: Option<ProfileId>,
     pub use_fzf: bool,
     pub log_level: LogLevel,
     pub output_format: OutputFormat,
-    pub auto_update: bool,
     pub strict_mode: bool,
     pub fallback_to_plain_nvim: bool,
     pub profiles_dir: Option<PathBuf>,

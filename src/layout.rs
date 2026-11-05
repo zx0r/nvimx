@@ -230,25 +230,6 @@ impl EnvLayout {
         std::process::exit(status.code().unwrap_or(1));
     }
 
-    /// Atomically replaces target binary, safely handling cross-device links (`EXDEV`).
-    ///
-    /// # Errors
-    /// Returns `Error::Io` if renaming/copying fails.
-    pub fn atomic_replace_exe(current_exe: &Path, temp_download: &Path) -> Result<()> {
-        if fs::rename(temp_download, current_exe).is_err() {
-            fs::copy(temp_download, current_exe)?;
-            let _ = fs::remove_file(temp_download);
-        }
-
-        #[cfg(unix)]
-        {
-            use std::os::unix::fs::PermissionsExt;
-            let _ = fs::set_permissions(current_exe, fs::Permissions::from_mode(0o755));
-        }
-
-        Ok(())
-    }
-
     /// Scans `profiles_dir` returning sorted valid profile identifiers.
     ///
     /// # Errors
@@ -298,7 +279,6 @@ mod tests {
             use_fzf: true,
             log_level: LogLevel::Info,
             output_format: OutputFormat::Text,
-            auto_update: false,
             strict_mode: false,
             fallback_to_plain_nvim: true,
             profiles_dir,
@@ -392,26 +372,6 @@ mod tests {
 
         let gamma_pid = ProfileId::parse("gamma").unwrap();
         assert!(!layout.profile_exists(&gamma_pid));
-
-        let _ = fs::remove_dir_all(&temp_dir);
-    }
-
-    #[test]
-    fn test_atomic_replace_exe() {
-        let temp_dir =
-            std::env::temp_dir().join(format!("nvimx_test_atomic_{}", std::process::id()));
-        let _ = fs::create_dir_all(&temp_dir);
-
-        let target_exe = temp_dir.join("binary");
-        let temp_exe = temp_dir.join(".binary.tmp");
-
-        fs::write(&target_exe, b"version 1").unwrap();
-        fs::write(&temp_exe, b"version 2").unwrap();
-
-        EnvLayout::atomic_replace_exe(&target_exe, &temp_exe).unwrap();
-
-        assert_eq!(fs::read(&target_exe).unwrap(), b"version 2");
-        assert!(!temp_exe.exists());
 
         let _ = fs::remove_dir_all(&temp_dir);
     }
