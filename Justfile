@@ -87,8 +87,8 @@ lint-workflows:
     zizmor --offline --min-severity high .github/workflows/
 
 # Run memory safety & aliasing verification via Miri Tree Borrows
-miri:
-    env MIRIFLAGS="-Zmiri-disable-isolation" cargo +nightly miri test --lib
+miri *args:
+    env RUST_BACKTRACE=1 MIRIFLAGS="-Zmiri-disable-isolation -Zmiri-tree-borrows -Zmiri-symbolic-alignment-check -Zmiri-strict-provenance" cargo +nightly miri test --lib {{ args }}
 
 # Verify SemVer API backwards compatibility
 semver:
