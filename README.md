@@ -14,12 +14,6 @@
   <a href="https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html">
     <img src="https://img.shields.io/badge/XDG-COMPLIANT-00FF00?style=flat-square&logo=linux&logoColor=white&labelColor=1a1a1a" />
   </a>
-  <a href="https://news.ycombinator.com/">
-    <img src="https://img.shields.io/badge/HACKER_NEWS-FF6600?style=flat-square&logo=y-combinator&logoColor=white&labelColor=1a1a1a" />
-  </a>
-  <a href="https://reddit.com/r/unixporn">
-    <img src="https://img.shields.io/badge/R%2FUNIXPORN-black?style=flat-square&logo=reddit&logoColor=FF00FF&labelColor=1a1a1a&color=000" />
-  </a>
 </p>
 
 <p align="center">

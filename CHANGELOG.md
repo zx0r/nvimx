@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-11-05
+
+### Changed
+- **Unix SRP Architecture**: Removed `install` subcommand and all Git/network dependencies (`git`, `gh`, `curl`) adhering strictly to the Unix philosophy and Single Responsibility Principle.
+- **Offline Ephemeral Sandbox**: `nvimx sandbox` now clones local profiles directly via standard filesystem operations with zero external processes or network access.
+- **Dependency Hygiene**: Stripped network/preset fields (`auto_install_missing`, `[presets]`) from configuration parser and example config.
+- **CI/CD Quality Gates**: Aligned Miri test suite with Tree Borrows and strict provenance model; cleaned up obsolete configuration files.
+
+### Fixed
+- Fixed Linux target linking configuration to use LLVM lld linker.
+- Removed outdated badges from README.
+
 ## [0.1.5] - 2026-10-31
 
 ### Changed
@@ -54,6 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated Homebrew formula updates in `zx0r/homebrew-tap`.
 - SLSA Level 3 provenance and CycloneDX SBOM generation for enhanced security.
 
+[0.1.6]: https://github.com/zx0r/nvimx/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/zx0r/nvimx/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/zx0r/nvimx/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/zx0r/nvimx/compare/v0.1.2...v0.1.3
