@@ -41,9 +41,6 @@ pub fn parse_invocation(args: &[OsString], cfg: &Config) -> Result<Command> {
             let plain = args[2..].iter().any(|a| a == "--plain");
             return Ok(Command::List { plain });
         }
-        "install" => {
-            return parse_install(&args[2..]);
-        }
         "clean" => {
             return parse_clean(&args[2..]);
         }
@@ -87,37 +84,6 @@ pub fn parse_invocation(args: &[OsString], cfg: &Config) -> Result<Command> {
         profile: cfg.default_profile.clone(),
         nvim_args: args[1..].to_vec(),
     }))
-}
-
-fn parse_install(args: &[OsString]) -> Result<Command> {
-    let mut positional = Vec::new();
-    for arg in args {
-        let s = arg.to_string_lossy();
-        if !s.starts_with('-') {
-            positional.push(s.to_string());
-        }
-    }
-
-    if positional.len() < 2 {
-        return Err(Error::Generic("usage: nvimx install <repo> <name>".into()));
-    }
-
-    let repo_or_preset = positional[0].clone();
-    let name = positional[1].clone();
-
-    // Invariant: name cannot be a reserved identifier
-    for &reserved in &RESERVED_COMMANDS {
-        if name == reserved {
-            return Err(Error::ReservedNameUsed(name));
-        }
-    }
-
-    let _ = ProfileId::parse(&name)?;
-
-    Ok(Command::Install {
-        repo_or_preset,
-        name,
-    })
 }
 
 fn parse_clean(args: &[OsString]) -> Result<Command> {
@@ -236,22 +202,6 @@ mod tests {
                 auto_confirm: true,
             }
         );
-    }
-
-    #[test]
-    fn test_parse_install_reserved_name() {
-        let cfg = Config::default_config();
-
-        let res = parse_invocation(
-            &[
-                "nvimx".into(),
-                "install".into(),
-                "repo".into(),
-                "clean".into(),
-            ],
-            &cfg,
-        );
-        assert!(matches!(res, Err(Error::ReservedNameUsed(_))));
     }
 
     #[test]

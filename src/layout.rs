@@ -299,11 +299,9 @@ mod tests {
             log_level: LogLevel::Info,
             output_format: OutputFormat::Text,
             auto_update: false,
-            auto_install_missing: true,
             strict_mode: false,
             fallback_to_plain_nvim: true,
             profiles_dir,
-            user_presets: Vec::new(),
         }
     }
 

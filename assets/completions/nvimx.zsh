@@ -14,7 +14,6 @@ _nvimx() {
     cmds=(
         'list:List profiles'
         'ls:List profiles'
-        'install:Install profile'
         'clean:Clean profile data'
         'init:Initialize environment or completions'
         'sandbox:Run profile in isolated environment'

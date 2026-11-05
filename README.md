@@ -83,17 +83,10 @@ Each profile is completely independent, enabling reproducible and conflict-free 
 
 #### Features
 
-* profile install from built-in preset (`.rodata`) or Git
+* isolated profile execution with zero overhead
+* interactive fuzzy picker (`fzf`)
 * sandbox execution (ephemeral environments)
-* shell completion
-
-```bash
-# Install from built-in preset (.rodata)
-nvimx install lazyvim lazyvim
-
-# Install from Git repository
-nvimx install <repo-url> <profile-name>
-```
+* shell completion (Fish, Zsh, Bash)
 
 ---
 
@@ -123,7 +116,6 @@ EXAMPLES:
 ```bash
 Commands:
   list, ls     List all locally installed profiles
-  install      Install a new profile from a git repository or preset
   clean        Safely remove data, state, and cache for a profile
   init         Output shell completions for fish, zsh, or bash
   sandbox      Run a profile in an isolated environment

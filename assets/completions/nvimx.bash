@@ -8,7 +8,7 @@ _nvimx() {
     local cur opts profiles
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    opts="list ls install clean init sandbox -h --help -V --version"
+    opts="list ls clean init sandbox -h --help -V --version"
     
     # Root: commands + profiles
     if [[ ${COMP_CWORD} -eq 1 ]]; then

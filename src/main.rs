@@ -3,7 +3,6 @@ use std::process::{Command as ProcessCommand, ExitCode};
 
 use nvimx::cli;
 use nvimx::layout::{self, EnvLayout};
-use nvimx::net;
 use nvimx::term::Terminal;
 use nvimx::types::{Command, Config, LaunchPayload, ProfileId, ShellKind};
 
@@ -33,10 +32,6 @@ fn main() -> ExitCode {
     match command {
         Command::Launch(ref payload) => handle_launch(payload, &config, term),
         Command::List { plain } => handle_list(plain, &config, term),
-        Command::Install {
-            ref repo_or_preset,
-            ref name,
-        } => handle_install(repo_or_preset, name, &config, term),
         Command::Clean {
             ref profile,
             auto_confirm,
@@ -61,7 +56,7 @@ fn execute_fast_path(cmd: &Command) -> ExitCode {
         }
         Command::Help => {
             println!(
-                "Zero-overhead Neovim profile manager\n\nUsage:\n  nvimx [PROFILE] [FILES...] [-- ARGS...]\n  nvimx <COMMAND> [FLAGS...]\n\nCommands:\n  list, ls     List all locally installed profiles\n  install      Install a new profile from a git repository or preset\n  clean        Safely remove data, state, and cache for a profile\n  init         Output shell completions for fish, zsh, or bash\n  sandbox      Run a profile in an isolated ephemeral environment\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
+                "Zero-overhead Neovim profile manager\n\nUsage:\n  nvimx [PROFILE] [FILES...] [-- ARGS...]\n  nvimx <COMMAND> [FLAGS...]\n\nCommands:\n  list, ls     List all locally installed profiles\n  clean        Safely remove data, state, and cache for a profile\n  init         Output shell completions for fish, zsh, or bash\n  sandbox      Run a profile in an isolated ephemeral environment\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
             );
             ExitCode::SUCCESS
         }
@@ -138,34 +133,6 @@ fn handle_list(plain: bool, cfg: &Config, term: Terminal) -> ExitCode {
     ExitCode::SUCCESS
 }
 
-fn handle_install(repo_or_preset: &str, name: &str, cfg: &Config, term: Terminal) -> ExitCode {
-    let layout = EnvLayout::resolve(cfg, None);
-    let pid = match ProfileId::parse(name) {
-        Ok(p) => p,
-        Err(e) => {
-            term.error(&e.to_string());
-            return ExitCode::FAILURE;
-        }
-    };
-
-    if layout.profile_exists(&pid) {
-        term.error("Profile already exists");
-        return ExitCode::FAILURE;
-    }
-
-    let url = net::resolve_source_url(repo_or_preset, cfg);
-    term.cyan_arrow(&format!("Fetching downloads for: {url}"));
-
-    let target_dir = layout.profiles_dir.join(pid.as_str());
-    if let Err(e) = net::clone_repository(url, &target_dir) {
-        term.error(&format!("Installation failed: {e}"));
-        return ExitCode::FAILURE;
-    }
-
-    term.success("done");
-    ExitCode::SUCCESS
-}
-
 fn handle_clean(profile_name: &str, auto_confirm: bool, cfg: &Config, term: Terminal) -> ExitCode {
     let layout = EnvLayout::resolve(cfg, None);
     let paths = layout.profile_storage_paths(profile_name);
@@ -221,13 +188,12 @@ fn handle_init(shell: Option<ShellKind>, cfg: &Config, term: Terminal) -> ExitCo
         return ExitCode::SUCCESS;
     }
 
-    let git_ok = ProcessCommand::new("git").arg("--version").output().is_ok();
     let nvim_ok = ProcessCommand::new("nvim")
         .arg("--version")
         .output()
         .is_ok();
-    if !git_ok || !nvim_ok {
-        term.error("missing essential dependencies");
+    if !nvim_ok {
+        term.error("missing essential dependency: nvim");
         return ExitCode::FAILURE;
     }
 
@@ -241,9 +207,37 @@ fn handle_init(shell: Option<ShellKind>, cfg: &Config, term: Terminal) -> ExitCo
     ExitCode::SUCCESS
 }
 
+fn copy_dir_all(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dst)?;
+    for entry in std::fs::read_dir(src)? {
+        let entry = entry?;
+        let ft = entry.file_type()?;
+        let from = entry.path();
+        let to = dst.join(entry.file_name());
+        if ft.is_dir() {
+            copy_dir_all(&from, &to)?;
+        } else if ft.is_file() {
+            std::fs::copy(&from, &to)?;
+        } else if ft.is_symlink() {
+            #[cfg(unix)]
+            {
+                if let Ok(target) = std::fs::read_link(&from) {
+                    let _ = std::os::unix::fs::symlink(target, &to);
+                }
+            }
+            #[cfg(not(unix))]
+            {
+                let _ = std::fs::copy(&from, &to);
+            }
+        }
+    }
+    Ok(())
+}
+
 fn handle_sandbox(target: &str, cfg: &Config, term: Terminal) -> ExitCode {
     let layout = EnvLayout::resolve(cfg, None);
-    let sandbox_dir = layout.cache_root.join("sandbox").join(target);
+    let target_name = if target.is_empty() { "default" } else { target };
+    let sandbox_dir = layout.cache_root.join("sandbox").join(target_name);
 
     let _ = std::fs::remove_dir_all(&sandbox_dir);
     let config_dir = sandbox_dir.join("config").join("nvim");
@@ -259,17 +253,36 @@ fn handle_sandbox(target: &str, cfg: &Config, term: Terminal) -> ExitCode {
     let _ = std::fs::create_dir_all(&state_dir);
     let _ = std::fs::create_dir_all(&cache_dir);
 
-    let url = net::resolve_source_url(target, cfg);
-    println!("Sandbox: {target}");
-    term.success(&format!("Resolved to: {url}"));
-    println!("Cloning profile into sandbox...");
+    if target.is_empty() {
+        println!("Sandbox: clean ephemeral environment");
+    } else {
+        let pid = match ProfileId::parse(target) {
+            Ok(p) => p,
+            Err(e) => {
+                term.error(&e.to_string());
+                return ExitCode::FAILURE;
+            }
+        };
 
-    if let Err(e) = net::clone_repository(url, &config_dir) {
-        term.error(&format!("Sandbox clone failed: {e}"));
-        return ExitCode::FAILURE;
+        if !layout.profile_exists(&pid) {
+            term.error(&format!("profile '{target}' not found"));
+            return ExitCode::FAILURE;
+        }
+
+        let src_dir = layout.profiles_dir.join(pid.as_str());
+        println!("Sandbox: {target}");
+        term.success(&format!(
+            "Cloning local profile from: {}",
+            layout::shrink_home_path(&src_dir)
+        ));
+
+        if let Err(e) = copy_dir_all(&src_dir, &config_dir) {
+            term.error(&format!("Sandbox copy failed: {e}"));
+            return ExitCode::FAILURE;
+        }
     }
 
-    term.success(&format!("Launching Neovim (sandbox: {target})"));
+    term.success(&format!("Launching Neovim (sandbox: {target_name})"));
 
     let status = ProcessCommand::new("nvim")
         .env("XDG_CONFIG_HOME", sandbox_dir.join("config"))
@@ -277,10 +290,10 @@ fn handle_sandbox(target: &str, cfg: &Config, term: Terminal) -> ExitCode {
         .env("XDG_STATE_HOME", &state_dir)
         .env("XDG_CACHE_HOME", &cache_dir)
         .env("NVIM_APPNAME", "nvim")
-        .env("NVIMX_SANDBOX", target)
+        .env("NVIMX_SANDBOX", target_name)
         .args([
             "--cmd",
-            &format!("set title titlestring=nvimx\\ sandbox:\\ {target}"),
+            &format!("set title titlestring=nvimx\\ sandbox:\\ {target_name}"),
         ])
         .status();
 

@@ -10,10 +10,6 @@ pub enum Error {
     ReservedNameUsed(String),
     ProfileNotFound(String),
     ProfileAlreadyExists(String),
-    MissingDependency(&'static str),
-    CommandFailed { cmd: String, status: i32 },
-    VersionParseError(String),
-    SelfUpdateFailed(String),
     OperationCancelled,
     Generic(String),
 }
@@ -34,12 +30,6 @@ impl fmt::Display for Error {
             ),
             Self::ProfileNotFound(name) => write!(f, "profile '{name}' not found"),
             Self::ProfileAlreadyExists(name) => write!(f, "profile '{name}' already exists"),
-            Self::MissingDependency(tool) => write!(f, "missing essential dependency: {tool}"),
-            Self::CommandFailed { cmd, status } => {
-                write!(f, "command '{cmd}' failed with status {status}")
-            }
-            Self::VersionParseError(ver) => write!(f, "failed to parse version string: '{ver}'"),
-            Self::SelfUpdateFailed(msg) => write!(f, "self-update failed: {msg}"),
             Self::OperationCancelled => write!(f, "operation cancelled by user"),
             Self::Generic(msg) => write!(f, "{msg}"),
         }
@@ -94,26 +84,6 @@ mod tests {
         assert_eq!(
             Error::ProfileAlreadyExists("exist".into()).to_string(),
             "profile 'exist' already exists"
-        );
-        assert_eq!(
-            Error::MissingDependency("git").to_string(),
-            "missing essential dependency: git"
-        );
-        assert_eq!(
-            Error::CommandFailed {
-                cmd: "git clone".into(),
-                status: 128
-            }
-            .to_string(),
-            "command 'git clone' failed with status 128"
-        );
-        assert_eq!(
-            Error::VersionParseError("abc".into()).to_string(),
-            "failed to parse version string: 'abc'"
-        );
-        assert_eq!(
-            Error::SelfUpdateFailed("permission denied".into()).to_string(),
-            "self-update failed: permission denied"
         );
         assert_eq!(
             Error::OperationCancelled.to_string(),

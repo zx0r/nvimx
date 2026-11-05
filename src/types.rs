@@ -4,41 +4,9 @@ use std::path::PathBuf;
 
 use crate::error::{Error, Result};
 
-/// Built-in canonical Neovim starters. Embedded in .rodata: 0 syscalls, 0 ms latency.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct BuiltinPreset {
-    pub name: &'static str,
-    pub repo: &'static str,
-    pub description: &'static str,
-}
-
-pub const BUILTIN_PRESETS: &[BuiltinPreset] = &[
-    BuiltinPreset {
-        name: "lazyvim",
-        repo: "https://github.com/LazyVim/starter",
-        description: "Full-featured distribution based on lazy.nvim",
-    },
-    BuiltinPreset {
-        name: "astronvim",
-        repo: "https://github.com/AstroNvim/template",
-        description: "Aesthetic, extensible distribution template",
-    },
-    BuiltinPreset {
-        name: "nvchad",
-        repo: "https://github.com/NvChad/starter",
-        description: "Blazing fast Neovim config with custom UI",
-    },
-    BuiltinPreset {
-        name: "kickstart",
-        repo: "https://github.com/nvim-lua/kickstart.nvim",
-        description: "Minimal, single-file starting point",
-    },
-];
-
-/// List of 8 system-reserved identifiers that cannot be used as profile names.
-pub const RESERVED_COMMANDS: [&str; 8] = [
-    "list", "ls", "install", "clean", "init", "sandbox", "repro", "debug",
-];
+/// List of 7 system-reserved identifiers that cannot be used as profile names.
+pub const RESERVED_COMMANDS: [&str; 7] =
+    ["list", "ls", "clean", "init", "sandbox", "repro", "debug"];
 
 /// A guaranteed valid profile identifier (Parse, Don't Validate).
 /// Invariants:
@@ -107,10 +75,6 @@ pub enum Command {
     List {
         plain: bool,
     },
-    Install {
-        repo_or_preset: String,
-        name: String,
-    },
     Clean {
         profile: String,
         auto_confirm: bool,
@@ -163,11 +127,9 @@ pub struct Config {
     pub log_level: LogLevel,
     pub output_format: OutputFormat,
     pub auto_update: bool,
-    pub auto_install_missing: bool,
     pub strict_mode: bool,
     pub fallback_to_plain_nvim: bool,
     pub profiles_dir: Option<PathBuf>,
-    pub user_presets: Vec<(String, String)>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -184,28 +146,9 @@ pub enum OutputFormat {
     Json,
 }
 
-/// Parsed `SemVer` representation: (major, minor, patch).
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct SemVer(pub u32, pub u32, pub u32);
-
-impl fmt::Display for SemVer {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "v{}.{}.{}", self.0, self.1, self.2)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn test_builtin_presets_integrity() {
-        assert_eq!(BUILTIN_PRESETS.len(), 4);
-        assert_eq!(BUILTIN_PRESETS[0].name, "lazyvim");
-        assert_eq!(BUILTIN_PRESETS[1].name, "astronvim");
-        assert_eq!(BUILTIN_PRESETS[2].name, "nvchad");
-        assert_eq!(BUILTIN_PRESETS[3].name, "kickstart");
-    }
 
     #[test]
     fn test_profile_id_valid() {
@@ -253,15 +196,5 @@ mod tests {
         assert_eq!(ShellKind::parse("zsh"), Some(ShellKind::Zsh));
         assert_eq!(ShellKind::parse("fish"), Some(ShellKind::Fish));
         assert_eq!(ShellKind::parse("unknown"), None);
-    }
-
-    #[test]
-    fn test_semver_ord_and_display() {
-        let v1 = SemVer(0, 1, 0);
-        let v2 = SemVer(0, 2, 0);
-        let v3 = SemVer(1, 0, 0);
-        assert!(v1 < v2);
-        assert!(v2 < v3);
-        assert_eq!(v1.to_string(), "v0.1.0");
     }
 }

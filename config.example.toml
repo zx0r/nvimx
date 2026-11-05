@@ -33,12 +33,3 @@ use_fzf = true
 # The absolute or tilde-expanded path where Neovim profiles are stored.
 # By default, nvimx relies on the standard XDG config directory (~/.config/nvim).
 profiles_dir = "~/.config/nvim"
-
-# -----------------------------------------------------------------------------
-# Custom Presets (Git Repositories)
-# -----------------------------------------------------------------------------
-
-# Map custom short names to git repository URLs for quick installation:
-#   nvimx install mydots work
-[presets]
-# profile = "https://github.com/username/my-nvim-profile"
