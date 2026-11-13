@@ -139,7 +139,7 @@ jobs:
       - name: "Detect Unused Dependencies (Fail-Fast)"
         run: "cargo machete"
 
-      # Enforce pinned toolchain version declared in rust-toolchain.toml (1.96.0)
+      # Enforce pinned toolchain version declared in rust-toolchain.toml (1.99.0)
       - name: "Introspect Pinned Rust Toolchain"
         run: "rustup show"
 

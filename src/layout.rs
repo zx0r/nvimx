@@ -268,7 +268,10 @@ impl EnvLayout {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Unit tests rely on unwrap for concise assertions"
+)]
 mod tests {
     use super::*;
     use crate::types::{LogLevel, OutputFormat};

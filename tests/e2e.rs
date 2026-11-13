@@ -1,4 +1,7 @@
-#![allow(clippy::expect_used)]
+#![allow(
+    clippy::expect_used,
+    reason = "Integration test assertions validate panicking failure modes directly"
+)]
 
 use std::fs;
 use std::process::{Command, Stdio};

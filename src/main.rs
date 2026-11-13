@@ -51,13 +51,11 @@ fn main() -> ExitCode {
 fn execute_fast_path(cmd: &Command) -> ExitCode {
     match cmd {
         Command::Version => {
-            println!("nvimx {}", env!("CARGO_PKG_VERSION"));
+            Terminal::print_version();
             ExitCode::SUCCESS
         }
         Command::Help => {
-            println!(
-                "Zero-overhead Neovim profile manager\n\nUsage:\n  nvimx [PROFILE] [FILES...] [-- ARGS...]\n  nvimx <COMMAND> [FLAGS...]\n\nCommands:\n  list, ls     List all locally installed profiles\n  clean        Safely remove data, state, and cache for a profile\n  init         Output shell completions for fish, zsh, or bash\n  sandbox      Run a profile in an isolated ephemeral environment\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
-            );
+            Terminal::print_help();
             ExitCode::SUCCESS
         }
         _ => ExitCode::FAILURE,
@@ -119,16 +117,16 @@ fn handle_list(plain: bool, cfg: &Config, term: Terminal) -> ExitCode {
 
     if plain {
         for p in profiles {
-            println!("{}", p.as_str());
+            term.println(p.as_str());
         }
     } else if profiles.is_empty() {
         term.hint("No profiles detected");
     } else {
-        println!("\nProfiles");
+        term.println("\nProfiles");
         for p in profiles {
             term.success(p.as_str());
         }
-        println!();
+        term.newline();
     }
     ExitCode::SUCCESS
 }
@@ -143,12 +141,12 @@ fn handle_clean(profile_name: &str, auto_confirm: bool, cfg: &Config, term: Term
         return ExitCode::SUCCESS;
     }
 
-    println!("Cleaning {profile_name}...");
-    println!("warning: the following directories will be deleted:");
+    term.println(&format!("Cleaning {profile_name}..."));
+    term.println("warning: the following directories will be deleted:");
     for p in &existing {
-        println!("  • {}", layout::shrink_home_path(p));
+        term.println(&format!("  • {}", layout::shrink_home_path(p)));
     }
-    println!();
+    term.newline();
 
     let confirmed = if auto_confirm {
         true
@@ -173,7 +171,7 @@ fn handle_clean(profile_name: &str, auto_confirm: bool, cfg: &Config, term: Term
         let label = labels.get(i).unwrap_or(&"Storage");
         term.success(&format!("{label} → {}", layout::shrink_home_path(p)));
     }
-    println!();
+    term.newline();
     term.success(&format!("{profile_name} cleaned"));
     ExitCode::SUCCESS
 }
@@ -181,9 +179,9 @@ fn handle_clean(profile_name: &str, auto_confirm: bool, cfg: &Config, term: Term
 fn handle_init(shell: Option<ShellKind>, cfg: &Config, term: Terminal) -> ExitCode {
     if let Some(sh) = shell {
         match sh {
-            ShellKind::Fish => print!("{}", include_str!("../assets/completions/nvimx.fish")),
-            ShellKind::Zsh => print!("{}", include_str!("../assets/completions/_nvimx")),
-            ShellKind::Bash => print!("{}", include_str!("../assets/completions/nvimx.bash")),
+            ShellKind::Fish => term.write_raw(include_bytes!("../assets/completions/nvimx.fish")),
+            ShellKind::Zsh => term.write_raw(include_bytes!("../assets/completions/_nvimx")),
+            ShellKind::Bash => term.write_raw(include_bytes!("../assets/completions/nvimx.bash")),
         }
         return ExitCode::SUCCESS;
     }
@@ -254,7 +252,7 @@ fn handle_sandbox(target: &str, cfg: &Config, term: Terminal) -> ExitCode {
     let _ = std::fs::create_dir_all(&cache_dir);
 
     if target.is_empty() {
-        println!("Sandbox: clean ephemeral environment");
+        term.println("Sandbox: clean ephemeral environment");
     } else {
         let pid = match ProfileId::parse(target) {
             Ok(p) => p,
@@ -270,7 +268,7 @@ fn handle_sandbox(target: &str, cfg: &Config, term: Terminal) -> ExitCode {
         }
 
         let src_dir = layout.profiles_dir.join(pid.as_str());
-        println!("Sandbox: {target}");
+        term.println(&format!("Sandbox: {target}"));
         term.success(&format!(
             "Cloning local profile from: {}",
             layout::shrink_home_path(&src_dir)

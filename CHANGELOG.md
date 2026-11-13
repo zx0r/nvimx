@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.7] - 2026-11-13
+
+### Changed
+- **Compiler Toolchain**: Upgraded hermetic compiler toolchain and MSRV boundary to Rust 1.99.0 across `rust-toolchain.toml`, `Cargo.toml`, `clippy.toml`, and CI workflows.
+- **Terminal & I/O Architecture**: Refactored console I/O into `Terminal` struct utilizing locked streams (`StdoutLock`/`StderrLock`) and direct byte writes (`write_raw` via `include_bytes!`); eliminated raw `println!` / `eprintln!` calls to avoid broken pipe panics and eliminate mutex re-locking overhead.
+- **Clippy Policy Hardening**: Enforced strict Clippy profile (`print_stdout = "deny"`, `print_stderr = "deny"`, `allow_attributes_without_reason = "deny"`), documented explicit reasons across all test modules, and configured `allow-print-in-tests = true`.
+
 ## [0.1.6] - 2026-11-05
 
 ### Changed
@@ -66,6 +73,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Automated Homebrew formula updates in `zx0r/homebrew-tap`.
 - SLSA Level 3 provenance and CycloneDX SBOM generation for enhanced security.
 
+[0.1.7]: https://github.com/zx0r/nvimx/compare/v0.1.6...v0.1.7
 [0.1.6]: https://github.com/zx0r/nvimx/compare/v0.1.5...v0.1.6
 [0.1.5]: https://github.com/zx0r/nvimx/compare/v0.1.4...v0.1.5
 [0.1.4]: https://github.com/zx0r/nvimx/compare/v0.1.3...v0.1.4

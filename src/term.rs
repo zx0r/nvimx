@@ -38,43 +38,76 @@ impl Terminal {
         }
     }
 
+    pub fn print_version() {
+        let mut stdout = io::stdout().lock();
+        let _ = writeln!(stdout, "nvimx {}", env!("CARGO_PKG_VERSION"));
+    }
+
+    pub fn print_help() {
+        let mut stdout = io::stdout().lock();
+        let _ = writeln!(
+            stdout,
+            "Zero-overhead Neovim profile manager\n\nUsage:\n  nvimx [PROFILE] [FILES...] [-- ARGS...]\n  nvimx <COMMAND> [FLAGS...]\n\nCommands:\n  list, ls     List all locally installed profiles\n  clean        Safely remove data, state, and cache for a profile\n  init         Output shell completions for fish, zsh, or bash\n  sandbox      Run a profile in an isolated ephemeral environment\n\nOptions:\n  -h, --help     Print help\n  -V, --version  Print version"
+        );
+    }
+
+    pub fn println(&self, msg: &str) {
+        let mut stdout = io::stdout().lock();
+        let _ = writeln!(stdout, "{msg}");
+    }
+
+    pub fn newline(&self) {
+        let mut stdout = io::stdout().lock();
+        let _ = writeln!(stdout);
+    }
+
+    pub fn write_raw(&self, bytes: &[u8]) {
+        let mut stdout = io::stdout().lock();
+        let _ = stdout.write_all(bytes);
+    }
+
     pub fn cyan_arrow(&self, msg: &str) {
+        let mut stdout = io::stdout().lock();
         if self.color_enabled {
-            println!("\x1b[1;36m==>\x1b[0m {msg}");
+            let _ = writeln!(stdout, "\x1b[1;36m==>\x1b[0m {msg}");
         } else {
-            println!("==> {msg}");
+            let _ = writeln!(stdout, "==> {msg}");
         }
     }
 
     pub fn success(&self, msg: &str) {
+        let mut stdout = io::stdout().lock();
         if self.color_enabled {
-            println!("\x1b[32m✔\x1b[0m {msg}");
+            let _ = writeln!(stdout, "\x1b[32m✔\x1b[0m {msg}");
         } else {
-            println!("✔ {msg}");
+            let _ = writeln!(stdout, "✔ {msg}");
         }
     }
 
     pub fn error(&self, msg: &str) {
+        let mut stderr = io::stderr().lock();
         if self.color_enabled {
-            eprintln!("\x1b[31m✘\x1b[0m {msg}");
+            let _ = writeln!(stderr, "\x1b[31m✘\x1b[0m {msg}");
         } else {
-            eprintln!("✘ {msg}");
+            let _ = writeln!(stderr, "✘ {msg}");
         }
     }
 
     pub fn hint(&self, msg: &str) {
+        let mut stderr = io::stderr().lock();
         if self.color_enabled {
-            eprintln!("\x1b[33mhint:\x1b[0m {msg}");
+            let _ = writeln!(stderr, "\x1b[33mhint:\x1b[0m {msg}");
         } else {
-            eprintln!("hint: {msg}");
+            let _ = writeln!(stderr, "hint: {msg}");
         }
     }
 
     pub fn dimmed(&self, msg: &str) {
+        let mut stdout = io::stdout().lock();
         if self.color_enabled {
-            println!("\x1b[2m{msg}\x1b[0m");
+            let _ = writeln!(stdout, "\x1b[2m{msg}\x1b[0m");
         } else {
-            println!("{msg}");
+            let _ = writeln!(stdout, "{msg}");
         }
     }
 
@@ -150,7 +183,10 @@ impl Terminal {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Unit tests rely on unwrap for concise assertions"
+)]
 mod tests {
     use super::*;
 

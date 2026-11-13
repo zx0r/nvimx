@@ -1,17 +1,18 @@
 [package]
 name = "nvimx"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2024"
 resolver = "3"
-rust-version = "1.96.0"
+rust-version = "1.99.0"
 repository = "https://github.com/zx0r/nvimx"
-description = "Fast, zero-dependency, isolated Neovim profile manager & process replacement engine"
+description = "Ultra-Fast, zero-dependency, Neovim profile manager"
 homepage = "https://github.com/zx0r/nvimx#readme"
-authors = ["zx0r <admin@zx0r.io>"]
+authors = ["zx0r <admin@xxxx.dev>"]
 license = "MIT OR Apache-2.0"
 readme = "README.md"
 categories = ["command-line-utilities"]
 keywords = ["nvimx", "neovim", "cli", "profile-manager", "dotfiles"]
+autobenches = false
 
 # Strict Source Ingestion Boundary: Whitelists strictly pure Rust sources & manifest
 include = [
@@ -34,7 +35,8 @@ opt-level = 3
 lto = "fat"
 codegen-units = 1
 panic = "abort"
-strip = true
+strip = "symbols"
+incremental = false
 
 # The profile that 'cargo dist' builds with
 [profile.dist]
@@ -45,9 +47,10 @@ lto = "fat"
 inherits = "release"
 opt-level = "z"
 lto = "fat"
-codegen-units = 1
 panic = "abort"
 strip = true
+incremental = false
+codegen-units = 1
 
 [profile.dev]
 opt-level = 0
@@ -88,21 +91,28 @@ trivial_numeric_casts = "warn"
 missing_debug_implementations = "warn"
 
 [lints.clippy]
-all = { level = "warn", priority = -1 }
+all = { level = "deny", priority = -1 }
 pedantic = { level = "warn", priority = -1 }
 nursery = { level = "warn", priority = -1 }
 cargo = { level = "warn", priority = -1 }
-unwrap_used = "warn"
-expect_used = "warn"
-panic = "deny"
-todo = "warn"
-unimplemented = "warn"
-dbg_macro = "deny"
-undocumented_unsafe_blocks = "deny"
+multiple_crate_versions = "allow"
 multiple_unsafe_ops_per_block = "deny"
+allow_attributes_without_reason = "deny"
+undocumented_unsafe_blocks = "deny"
+unwrap_used = "deny"
+expect_used = "deny"
+panic = "deny"
+todo = "deny"
+dbg_macro = "deny"
+unimplemented = "deny"
+print_stdout = "deny"
+print_stderr = "deny"
+inline_always = "warn"
 needless_pass_by_value = "warn"
-module_name_repetitions = "allow"
+must_use_candidate = "allow"
 cast_possible_truncation = "allow"
 cast_sign_loss = "allow"
 cast_precision_loss = "allow"
-doc_markdown = "allow"
+cast_possible_wrap = "allow"
+missing_errors_doc = "allow"
+module_name_repetitions = "allow"

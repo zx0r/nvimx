@@ -128,7 +128,10 @@ fn strip_quotes(val: &str) -> &str {
 }
 
 #[cfg(test)]
-#[allow(clippy::unwrap_used)]
+#[allow(
+    clippy::unwrap_used,
+    reason = "Unit tests rely on unwrap for concise assertions"
+)]
 mod tests {
     use super::*;
 
